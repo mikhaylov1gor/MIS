@@ -8,7 +8,7 @@ namespace MIS.Models
         public DateTime createTime { get; set; }
         public Guid inspectionId { get; set; }
         public SpecialityModel speciality { get; set; }
-        public CommentModel? comments { get; set; }
+        public List<CommentModel>? comments { get; set; }
 
     }
 }

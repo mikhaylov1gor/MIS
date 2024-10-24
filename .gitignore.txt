@@ -1,1 +1,2 @@
-MIS/.vs/MIS/FileContentIndex/0b603b1d-dad0-4b6d-ae13-ba5759252166.vsidx
+MIS/.vs/
+.vs/
