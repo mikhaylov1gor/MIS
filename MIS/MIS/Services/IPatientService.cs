@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Mvc;
-using MIS.Models;
+using MIS.Models.DTO;
 
 namespace MIS.Services
 {

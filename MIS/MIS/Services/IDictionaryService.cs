@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
-using MIS.Models;
+using MIS.Models.DTO;
 
 namespace MIS.Services
 {

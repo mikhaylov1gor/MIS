@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using MIS.Models;
+using MIS.Models.DTO;
 using MIS.Services;
 
 namespace MIS.Controllers

@@ -1,13 +1,23 @@
+using Microsoft.Extensions.Options;
 using MIS.Services;
+using MIS.Models;
+using MIS.Models.DB;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+//swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+//database
+var connection = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<MisDbContext>(options => options.UseSqlServer(connection));
+
+//services
 builder.Services.AddScoped<IConsultationService, ConsultationService>();
 builder.Services.AddScoped<IDictionaryService, DictionaryService>();
 builder.Services.AddScoped<IDoctorService, DoctorService>();

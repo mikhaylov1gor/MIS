@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MIS.Models;
+using MIS.Models.DTO;
 using MIS.Services;
 
 namespace MIS.Controllers

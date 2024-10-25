@@ -1,4 +1,4 @@
-﻿using MIS.Models;
+﻿using MIS.Models.DTO;
 
 namespace MIS.Services
 {
