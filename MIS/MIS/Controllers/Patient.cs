@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MIS.Models;
+using MIS.Services;
 
 namespace MIS.Controllers
 {
@@ -7,40 +9,54 @@ namespace MIS.Controllers
     [ApiController]
     public class PatientController : ControllerBase
     {
+        public PatientService _patientService;
+
         [HttpPost]
-        public string post()
+        public bool createPatient(PatientCreateModel patient)
         {
-            return "post";
+            return _patientService.createPatient(patient);
         }
 
         [HttpGet]
-        public string get()
+        public ActionResult<PatientPagedListModel> getPatients(
+            [FromQuery] string name,
+            [FromQuery] Conclusion[] conclusions,
+            [FromQuery] PatientSorting sorting,
+            [FromQuery] bool scheduledVisits,
+            [FromQuery] bool onlyMine,
+            [FromQuery] int page = 1,
+            [FromQuery] int size = 5)
         {
-            return "get";
+            return _patientService.getPatients(name, conclusions, sorting, scheduledVisits, onlyMine, page, size) ;
         }
 
         [HttpPost("{id}/inspections")]
-        public string post1()
+        public bool createInspection(Guid id, InspectionCreateModel model)
         {
-            return "post";
+            return _patientService.createInspection(id, model);
         }
 
         [HttpGet("{id}/inspections")]
-        public string get1()
+        public InspectionPagedListModel getInspections(
+            Guid id,
+            [FromQuery] bool grouped,
+            [FromQuery] List<Guid> icdRoots,
+            [FromQuery] int page,
+            [FromQuery] int size)
         {
-            return "get";
+            return _patientService.getInspections(id, grouped, icdRoots, page, size);
         }
 
         [HttpGet("{id}")]
-        public string get2()
+        public PatientModel getPatient(Guid id)
         {
-            return "get";
+            return _patientService.getPatient(id);
         }
 
         [HttpGet("{id}/inspections/search")]
-        public string get3()
+        public IEnumerable<InspectionShortModel> getShortInspection(Guid id, [FromQuery] string request)
         {
-            return "get";
+            return _patientService.getShortInspection(id, request);
         }
     }
 }

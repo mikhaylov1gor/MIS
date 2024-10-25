@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using MIS.Models;
+using MIS.Services;
 
 namespace MIS.Controllers
 {
@@ -9,28 +10,35 @@ namespace MIS.Controllers
     [ApiController]
     public class ConsultationController : ControllerBase
     {
+        private ConsultationService _consultationService;
+
         [HttpGet]
-        public List<ConsultationModel>? get()
+        public ActionResult<InspectionPagedListModel> getList(
+                [FromQuery] bool grouped,
+                [FromQuery] List<Guid> icdRoots,
+                [FromQuery] int page = 1,
+                [FromQuery] int size = 5
+            )
         {
-            List<ConsultationModel> consultationModels = new List<ConsultationModel>();
-            return consultationModels;
+            return _consultationService.GetList(grouped, icdRoots, page, size);
         }
+
         [HttpGet("{id}")]
-        public ConsultationModel getId(int id)
+        public ActionResult<ConsultationModel> getConsultationById(Guid id)
         {
-            ConsultationModel consultationModel = new ConsultationModel();
-            return consultationModel;
+            return _consultationService.GetById(id);
         }
+
         [HttpPost("{id}/comment")]
-        public string postComment(int id, string comment)
+        public ActionResult<CommentCreateModel> postComment(Guid id, CommentCreateModel comment)
         {
-            return comment;
+            return _consultationService.CreateById(id, comment);   
         }
 
         [HttpPut("/comment/{id}")]
-        public string editComment(int id, string comment)
+        public ActionResult<InspectionCommentCreateModel> editComment(Guid id, CommentModel comment)
         {
-            return comment;
+            return _consultationService.EditById(id, comment); 
         }
 
     }

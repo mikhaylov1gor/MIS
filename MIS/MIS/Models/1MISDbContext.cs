@@ -16,6 +16,9 @@ namespace MIS.Models
         public DbSet<ResponseModel> Responses { get; set; }
         public DbSet<SpecialityModel> Specialties { get; set; }
 
-        public MisDbContext(DbContextOptions<MisDbContext> options) : base(options){}
+        public MisDbContext(DbContextOptions<MisDbContext> options) : base(options)
+        {
+            Database.EnsureCreated();
+        }
     }
 }

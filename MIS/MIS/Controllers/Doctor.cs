@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
+using MIS.Models;
+using MIS.Services;
 
 namespace MIS.Controllers
 {
@@ -8,34 +10,36 @@ namespace MIS.Controllers
     [ApiController]
     public class Doctor : ControllerBase
     {
+        private DoctorService _doctorService;
+
         [HttpPost("/register")]
-        public string post()
+        public bool register(DoctorRegisterModel doctor)
         {
-            return "post";
+            return _doctorService.register(doctor);
         }
 
         [HttpPost("/login")]
-        public string post1()
+        public bool login(LoginCredentialsModel loginCredentials)
         {
-            return "post";
+            return _doctorService.login(loginCredentials);
         }
 
         [HttpPost("/logout")]
-        public string post2()
+        public bool logout()
         {
-            return "post";
+            return _doctorService.logout();
         }
 
         [HttpGet("/profile")]
-        public string get()
+        public DoctorModel getProfile()
         {
-            return "get";
+            return _doctorService.getProfile();
         }
 
         [HttpPut("/profile")]
-        public string post3()
+        public bool editProfile(DoctorEditModel doctorEdit)
         {
-            return "post";
+            return _doctorService.editProfile(doctorEdit);
         }
 
     }

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MIS.Models;
+using MIS.Services;
 
 namespace MIS.Controllers
 {
@@ -7,10 +9,15 @@ namespace MIS.Controllers
     [ApiController]
     public class ReportController : ControllerBase
     {
+        private ReportService _reportService;
+
         [HttpGet("{id}/icdrootsreport")]
-        public string get()
+        public IcdRootsReportModel getReport(
+            [FromQuery] DateTime start,
+            [FromQuery] DateTime end,
+            [FromQuery] List<Guid> icdRoots)
         {
-            return "get";
+            return _reportService.getReport(start, end, icdRoots);
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MIS.Models;
+using MIS.Services;
 
 namespace MIS.Controllers
 {
@@ -7,22 +9,24 @@ namespace MIS.Controllers
     [ApiController]
     public class InspectionController : ControllerBase
     {
+        private InspectionService _inspectionService;
+
         [HttpGet("{id}")]
-        public string get()
+        public ActionResult<InspectionModel> getInspection(Guid id)
         {
-            return "get";
+            return _inspectionService.getInspection(id);
         }
 
         [HttpPut("{id}")]
-        public string put()
+        public bool editInspection(Guid id, InspectionEditModel inspectionEdit)
         {
-            return "put";
+            return _inspectionService.editInspection(id, inspectionEdit);
         }
 
         [HttpGet("{id}/chain")]
-        public string get1()
+        public IEnumerable<InspectionPreviewModel> getChainInspections(Guid id)
         {
-            return "get";
+            return _inspectionService.getChainInspections(id);
         }
     }
 }

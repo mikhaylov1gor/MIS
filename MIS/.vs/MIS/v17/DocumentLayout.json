@@ -7,44 +7,64 @@
       "RelativeMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|solutionrelative:mis\\controllers\\consultation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|c:\\users\\mikha\\source\\repos\\webnet-2024_aspnet_1\\mis\\mis\\controllers\\doctor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|solutionrelative:mis\\controllers\\doctor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|c:\\users\\mikha\\source\\repos\\webnet-2024_aspnet_1\\mis\\mis\\controllers\\dictionary.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|solutionrelative:mis\\controllers\\dictionary.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|c:\\users\\mikha\\source\\repos\\webnet-2024_aspnet_1\\mis\\mis\\services\\idictionaryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|solutionrelative:mis\\services\\idictionaryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|c:\\users\\mikha\\source\\repos\\webnet-2024_aspnet_1\\mis\\mis\\services\\iinspectionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|solutionrelative:mis\\services\\iinspectionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|c:\\users\\mikha\\source\\repos\\webnet-2024_aspnet_1\\mis\\mis\\controllers\\report.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|solutionrelative:mis\\controllers\\report.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|c:\\users\\mikha\\source\\repos\\webnet-2024_aspnet_1\\mis\\mis\\controllers\\patient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|solutionrelative:mis\\controllers\\patient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|c:\\users\\mikha\\source\\repos\\webnet-2024_aspnet_1\\mis\\mis\\controllers\\inspection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|solutionrelative:mis\\controllers\\inspection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|c:\\users\\mikha\\source\\repos\\webnet-2024_aspnet_1\\mis\\mis\\controllers\\dictionary.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|solutionrelative:mis\\controllers\\dictionary.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|c:\\users\\mikha\\source\\repos\\webnet-2024_aspnet_1\\mis\\mis\\services\\iconsultationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|solutionrelative:mis\\services\\iconsultationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|c:\\users\\mikha\\source\\repos\\webnet-2024_aspnet_1\\mis\\mis\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|solutionrelative:mis\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|c:\\users\\mikha\\source\\repos\\webnet-2024_aspnet_1\\mis\\mis\\services\\ireportservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|solutionrelative:mis\\services\\ireportservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|c:\\users\\mikha\\source\\repos\\webnet-2024_aspnet_1\\mis\\mis\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|solutionrelative:mis\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|c:\\users\\mikha\\source\\repos\\webnet-2024_aspnet_1\\mis\\mis\\mis.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
-      "RelativeMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|solutionrelative:mis\\mis.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
+      "AbsoluteMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|c:\\users\\mikha\\source\\repos\\webnet-2024_aspnet_1\\mis\\mis\\controllers\\patient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|solutionrelative:mis\\controllers\\patient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|c:\\users\\mikha\\source\\repos\\webnet-2024_aspnet_1\\mis\\mis\\services\\iconsultationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|solutionrelative:mis\\services\\iconsultationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|c:\\users\\mikha\\source\\repos\\webnet-2024_aspnet_1\\mis\\mis\\models\\patientsorting.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|solutionrelative:mis\\models\\patientsorting.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|c:\\users\\mikha\\source\\repos\\webnet-2024_aspnet_1\\mis\\mis\\controllers\\inspection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|solutionrelative:mis\\controllers\\inspection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|c:\\users\\mikha\\source\\repos\\webnet-2024_aspnet_1\\mis\\mis\\controllers\\doctor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|solutionrelative:mis\\controllers\\doctor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|c:\\users\\mikha\\source\\repos\\webnet-2024_aspnet_1\\mis\\mis\\services\\idoctorservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|solutionrelative:mis\\services\\idoctorservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|c:\\users\\mikha\\source\\repos\\webnet-2024_aspnet_1\\mis\\mis\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|solutionrelative:mis\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|c:\\users\\mikha\\source\\repos\\webnet-2024_aspnet_1\\mis\\mis\\models\\1misdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|solutionrelative:mis\\models\\1misdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|c:\\users\\mikha\\source\\repos\\webnet-2024_aspnet_1\\mis\\mis\\mis.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
+      "RelativeMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|solutionrelative:mis\\mis.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|c:\\users\\mikha\\source\\repos\\webnet-2024_aspnet_1\\mis\\mis\\models\\icd10recordmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -105,10 +125,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|c:\\users\\mikha\\source\\repos\\webnet-2024_aspnet_1\\mis\\mis\\models\\specialtiespagedlistmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|solutionrelative:mis\\models\\specialtiespagedlistmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|c:\\users\\mikha\\source\\repos\\webnet-2024_aspnet_1\\mis\\mis\\models\\patientsorting.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|solutionrelative:mis\\models\\patientsorting.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3CE7E5B0-C9CA-4D55-8376-A232BC186CE4}|MIS\\MIS.csproj|c:\\users\\mikha\\source\\repos\\webnet-2024_aspnet_1\\mis\\mis\\models\\patientpagedlistmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -198,7 +214,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 10,
           "Children": [
             {
               "$type": "Bookmark",
@@ -206,52 +222,52 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 11,
               "Title": "Doctor.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Controllers\\Doctor.cs",
               "RelativeDocumentMoniker": "MIS\\Controllers\\Doctor.cs",
               "ToolTip": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Controllers\\Doctor.cs",
               "RelativeToolTip": "MIS\\Controllers\\Doctor.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAACMAAAAbAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABQAAAAcAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-10-24T20:43:58.286Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "MIS.http",
-              "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\MIS.http",
-              "RelativeDocumentMoniker": "MIS\\MIS.http",
-              "ToolTip": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\MIS.http",
-              "RelativeToolTip": "MIS\\MIS.http",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
-              "WhenOpened": "2024-10-24T20:36:46.109Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Report.cs",
-              "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Controllers\\Report.cs",
-              "RelativeDocumentMoniker": "MIS\\Controllers\\Report.cs",
-              "ToolTip": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Controllers\\Report.cs",
-              "RelativeToolTip": "MIS\\Controllers\\Report.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAJAAAA",
+              "DocumentIndex": 6,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Program.cs",
+              "RelativeDocumentMoniker": "MIS\\Program.cs",
+              "ToolTip": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Program.cs",
+              "RelativeToolTip": "MIS\\Program.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA8AAAA8AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-24T20:35:44.497Z",
+              "WhenOpened": "2024-10-24T20:36:50.476Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 9,
+              "Title": "PatientSorting.cs",
+              "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\PatientSorting.cs",
+              "RelativeDocumentMoniker": "MIS\\Models\\PatientSorting.cs",
+              "ToolTip": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\PatientSorting.cs",
+              "RelativeToolTip": "MIS\\Models\\PatientSorting.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAWAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-24T11:05:11.212Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "Patient.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Controllers\\Patient.cs",
               "RelativeDocumentMoniker": "MIS\\Controllers\\Patient.cs",
               "ToolTip": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Controllers\\Patient.cs",
               "RelativeToolTip": "MIS\\Controllers\\Patient.cs",
-              "ViewState": "AQIAABoAAAAAAAAAAAAAACsAAAAJAAAA",
+              "ViewState": "AQIAAB4AAAAAAAAAAAAYwDsAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-10-24T20:34:32.746Z",
               "EditorCaption": ""
@@ -259,27 +275,66 @@
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "Inspection.cs",
-              "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Controllers\\Inspection.cs",
-              "RelativeDocumentMoniker": "MIS\\Controllers\\Inspection.cs",
-              "ToolTip": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Controllers\\Inspection.cs",
-              "RelativeToolTip": "MIS\\Controllers\\Inspection.cs",
-              "ViewState": "AQIAAAcAAAAAAAAAAAAAABYAAAAcAAAA",
+              "Title": "Report.cs",
+              "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Controllers\\Report.cs",
+              "RelativeDocumentMoniker": "MIS\\Controllers\\Report.cs",
+              "ToolTip": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Controllers\\Report.cs",
+              "RelativeToolTip": "MIS\\Controllers\\Report.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABUAAAAFAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-24T20:33:47.428Z",
+              "WhenOpened": "2024-10-24T20:35:44.497Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 1,
               "Title": "Dictionary.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Controllers\\Dictionary.cs",
               "RelativeDocumentMoniker": "MIS\\Controllers\\Dictionary.cs",
               "ToolTip": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Controllers\\Dictionary.cs",
               "RelativeToolTip": "MIS\\Controllers\\Dictionary.cs",
-              "ViewState": "AQIAAAYAAAAAAAAAAAAAABMAAAAeAAAA",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAACAAAAAMAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-10-24T20:26:36.298Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "IDictionaryService.cs",
+              "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Services\\IDictionaryService.cs",
+              "RelativeDocumentMoniker": "MIS\\Services\\IDictionaryService.cs",
+              "ToolTip": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Services\\IDictionaryService.cs",
+              "RelativeToolTip": "MIS\\Services\\IDictionaryService.cs",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAABEAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-25T11:49:46.82Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "IDoctorService.cs",
+              "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Services\\IDoctorService.cs",
+              "RelativeDocumentMoniker": "MIS\\Services\\IDoctorService.cs",
+              "ToolTip": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Services\\IDoctorService.cs",
+              "RelativeToolTip": "MIS\\Services\\IDoctorService.cs",
+              "ViewState": "AQIAAAUAAAAAAAAAAAAAwA4AAAAiAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-25T12:08:26.552Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "IReportService.cs",
+              "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Services\\IReportService.cs",
+              "RelativeDocumentMoniker": "MIS\\Services\\IReportService.cs",
+              "ToolTip": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Services\\IReportService.cs",
+              "RelativeToolTip": "MIS\\Services\\IReportService.cs",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAABEAAAAsAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-25T12:50:22.515Z",
               "EditorCaption": ""
             },
             {
@@ -290,66 +345,91 @@
               "RelativeDocumentMoniker": "MIS\\Controllers\\Consultation.cs",
               "ToolTip": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Controllers\\Consultation.cs",
               "RelativeToolTip": "MIS\\Controllers\\Consultation.cs",
-              "ViewState": "AQIAAAsAAAAAAAAAAAAAwB0AAAAfAAAA",
+              "ViewState": "AQIAAAkAAAAAAAAAAAAAABYAAAAMAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-10-24T12:52:00.454Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
+              "Title": "IConsultationService.cs",
+              "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Services\\IConsultationService.cs",
+              "RelativeDocumentMoniker": "MIS\\Services\\IConsultationService.cs",
+              "ToolTip": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Services\\IConsultationService.cs",
+              "RelativeToolTip": "MIS\\Services\\IConsultationService.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAACwAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-25T11:55:39.352Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "IInspectionService.cs",
+              "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Services\\IInspectionService.cs",
+              "RelativeDocumentMoniker": "MIS\\Services\\IInspectionService.cs",
+              "ToolTip": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Services\\IInspectionService.cs",
+              "RelativeToolTip": "MIS\\Services\\IInspectionService.cs",
+              "ViewState": "AQIAAAcAAAAAAAAAAAAQwBYAAAAXAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-25T12:18:07.907Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Inspection.cs",
+              "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Controllers\\Inspection.cs",
+              "RelativeDocumentMoniker": "MIS\\Controllers\\Inspection.cs",
+              "ToolTip": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Controllers\\Inspection.cs",
+              "RelativeToolTip": "MIS\\Controllers\\Inspection.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAB8AAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-24T20:33:47.428Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\appsettings.json",
               "RelativeDocumentMoniker": "MIS\\appsettings.json",
               "ToolTip": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\appsettings.json",
               "RelativeToolTip": "MIS\\appsettings.json",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2024-10-24T20:38:06.237Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "IConsultationService.cs",
-              "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Services\\IConsultationService.cs",
-              "RelativeDocumentMoniker": "MIS\\Services\\IConsultationService.cs",
-              "ToolTip": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Services\\IConsultationService.cs",
-              "RelativeToolTip": "MIS\\Services\\IConsultationService.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAFAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-24T09:51:12.503Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Program.cs",
-              "RelativeDocumentMoniker": "MIS\\Program.cs",
-              "ToolTip": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Program.cs",
-              "RelativeToolTip": "MIS\\Program.cs",
+              "DocumentIndex": 15,
+              "Title": "MIS.http",
+              "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\MIS.http",
+              "RelativeDocumentMoniker": "MIS\\MIS.http",
+              "ToolTip": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\MIS.http",
+              "RelativeToolTip": "MIS\\MIS.http",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-24T20:36:50.476Z",
-              "EditorCaption": ""
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
+              "WhenOpened": "2024-10-24T20:36:46.109Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 14,
               "Title": "1MISDbContext.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\1MISDbContext.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\1MISDbContext.cs",
               "ToolTip": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\1MISDbContext.cs",
               "RelativeToolTip": "MIS\\Models\\1MISDbContext.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAAAAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABQAAAAlAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-10-24T10:03:49.792Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 22,
               "Title": "ResponseModel.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\ResponseModel.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\ResponseModel.cs",
@@ -361,7 +441,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 25,
               "Title": "DiagnosisModel.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\DiagnosisModel.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\DiagnosisModel.cs",
@@ -373,7 +453,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 18,
               "Title": "IcdRootsReportRecordModel.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\IcdRootsReportRecordModel.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\IcdRootsReportRecordModel.cs",
@@ -385,7 +465,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 19,
               "Title": "IcdRootsReportModel.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\IcdRootsReportModel.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\IcdRootsReportModel.cs",
@@ -397,7 +477,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 24,
               "Title": "InspectionCommentCreateModel.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\InspectionCommentCreateModel.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\InspectionCommentCreateModel.cs",
@@ -409,7 +489,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 20,
               "Title": "ConsultationModel.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\ConsultationModel.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\ConsultationModel.cs",
@@ -421,7 +501,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 26,
               "Title": "DoctorModel.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\DoctorModel.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\DoctorModel.cs",
@@ -433,7 +513,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 27,
               "Title": "PatientModel.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\PatientModel.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\PatientModel.cs",
@@ -445,7 +525,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 28,
               "Title": "SpecialityModel.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\SpecialityModel.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\SpecialityModel.cs",
@@ -457,7 +537,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 30,
               "Title": "SpecialtiesPagedListModel.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\SpecialtiesPagedListModel.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\SpecialtiesPagedListModel.cs",
@@ -469,7 +549,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 29,
+              "DocumentIndex": 33,
               "Title": "LoginCredentialsModel.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\LoginCredentialsModel.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\LoginCredentialsModel.cs",
@@ -481,7 +561,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 28,
+              "DocumentIndex": 32,
               "Title": "PatientCreateModel.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\PatientCreateModel.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\PatientCreateModel.cs",
@@ -493,7 +573,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 31,
               "Title": "PatientPagedListModel.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\PatientPagedListModel.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\PatientPagedListModel.cs",
@@ -505,19 +585,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
-              "Title": "PatientSorting.cs",
-              "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\PatientSorting.cs",
-              "RelativeDocumentMoniker": "MIS\\Models\\PatientSorting.cs",
-              "ToolTip": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\PatientSorting.cs",
-              "RelativeToolTip": "MIS\\Models\\PatientSorting.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAWAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-24T11:05:11.212Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 29,
               "Title": "TokenResponseModel.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\TokenResponseModel.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\TokenResponseModel.cs",
@@ -529,7 +597,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 30,
+              "DocumentIndex": 34,
               "Title": "InspectionShortModel.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\InspectionShortModel.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\InspectionShortModel.cs",
@@ -541,7 +609,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 31,
+              "DocumentIndex": 35,
               "Title": "InspectionPreviewModel.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\InspectionPreviewModel.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\InspectionPreviewModel.cs",
@@ -553,7 +621,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 32,
+              "DocumentIndex": 36,
               "Title": "InspectionPagedListModel.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\InspectionPagedListModel.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\InspectionPagedListModel.cs",
@@ -565,7 +633,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 21,
               "Title": "InspectionModel.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\InspectionModel.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\InspectionModel.cs",
@@ -577,7 +645,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 34,
+              "DocumentIndex": 38,
               "Title": "InspectionEditModel.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\InspectionEditModel.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\InspectionEditModel.cs",
@@ -589,7 +657,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 33,
+              "DocumentIndex": 37,
               "Title": "InspectionCreateModel.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\InspectionCreateModel.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\InspectionCreateModel.cs",
@@ -601,7 +669,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 37,
+              "DocumentIndex": 41,
               "Title": "InspectionConsultationModel.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\InspectionConsultationModel.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\InspectionConsultationModel.cs",
@@ -613,7 +681,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 38,
+              "DocumentIndex": 42,
               "Title": "InspectionCommentModel.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\InspectionCommentModel.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\InspectionCommentModel.cs",
@@ -625,7 +693,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 36,
+              "DocumentIndex": 40,
               "Title": "ComentCreateModel.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\ComentCreateModel.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\ComentCreateModel.cs",
@@ -637,7 +705,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 23,
               "Title": "CommentModel.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\CommentModel.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\CommentModel.cs",
@@ -649,7 +717,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 35,
+              "DocumentIndex": 39,
               "Title": "Conclusion.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\Conclusion.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\Conclusion.cs",
@@ -661,7 +729,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 39,
+              "DocumentIndex": 43,
               "Title": "IcdRootsReportFiltersModel.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\IcdRootsReportFiltersModel.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\IcdRootsReportFiltersModel.cs",
@@ -673,7 +741,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 40,
+              "DocumentIndex": 44,
               "Title": "PageInfoModel.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\PageInfoModel.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\PageInfoModel.cs",
@@ -685,7 +753,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 17,
               "Title": "Icd10SearchModel.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\Icd10SearchModel.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\Icd10SearchModel.cs",
@@ -697,7 +765,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 16,
               "Title": "Icd10RecordModel.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\Icd10RecordModel.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\Icd10RecordModel.cs",
@@ -709,7 +777,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 41,
+              "DocumentIndex": 45,
               "Title": "DoctorRegisterModel.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\DoctorRegisterModel.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\DoctorRegisterModel.cs",
@@ -721,7 +789,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 43,
+              "DocumentIndex": 47,
               "Title": "Gender.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\Gender.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\Gender.cs",
@@ -733,7 +801,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 42,
+              "DocumentIndex": 46,
               "Title": "DoctorEditModel.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\DoctorEditModel.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\DoctorEditModel.cs",
@@ -745,7 +813,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 44,
+              "DocumentIndex": 48,
               "Title": "DiagnosisType.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\DiagnosisType.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\DiagnosisType.cs",
@@ -757,7 +825,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 45,
+              "DocumentIndex": 49,
               "Title": "DiagnosisCreateModel.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\DiagnosisCreateModel.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\DiagnosisCreateModel.cs",
@@ -769,7 +837,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 46,
+              "DocumentIndex": 50,
               "Title": "ConsultationCreateModel.cs",
               "DocumentMoniker": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\Models\\ConsultationCreateModel.cs",
               "RelativeDocumentMoniker": "MIS\\Models\\ConsultationCreateModel.cs",
