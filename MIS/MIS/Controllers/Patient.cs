@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MIS.Models.DB;
 using MIS.Models.DTO;
 using MIS.Services;
 
@@ -9,16 +10,38 @@ namespace MIS.Controllers
     [ApiController]
     public class PatientController : ControllerBase
     {
-        public PatientService _patientService;
+        public IPatientService _patientService;
 
-        [HttpPost]
-        public bool createPatient(PatientCreateModel patient)
+        public PatientController(IPatientService service)
         {
-            return _patientService.createPatient(patient);
+            _patientService = service;
         }
 
+        // создать пациента
+        [HttpPost]
+        public async Task<IActionResult> createPatient(PatientCreateModel patient)
+        {
+            if (!ModelState.IsValid)
+            {
+                return StatusCode(401, new ResponseModel { status = "401" , message = "model is incorrect"});
+            }
+
+            try
+            {
+                await _patientService.createPatient(patient);
+                return Ok(new ResponseModel { status = "200", message = "Success"});
+            }
+
+            catch (Exception ex)
+            {
+                ResponseModel model = new ResponseModel();
+                return StatusCode(500, model);
+            }
+        }
+
+        // получить лист пациентов
         [HttpGet]
-        public ActionResult<PatientPagedListModel> getPatients(
+        public async Task<ActionResult<PatientPagedListModel>> getPatients(
             [FromQuery] string name,
             [FromQuery] Conclusion[] conclusions,
             [FromQuery] PatientSorting sorting,
@@ -27,15 +50,26 @@ namespace MIS.Controllers
             [FromQuery] int page = 1,
             [FromQuery] int size = 5)
         {
-            return _patientService.getPatients(name, conclusions, sorting, scheduledVisits, onlyMine, page, size) ;
+            var patients = await _patientService.getPatients(name, conclusions, sorting, scheduledVisits, onlyMine, page, size);
+
+            if (patients == null)
+            {
+                return StatusCode(404, new ResponseModel { status = "404", message = "Not Found" });
+            }
+            else
+            {
+                return StatusCode(200, patients);
+            }
         }
 
         [HttpPost("{id}/inspections")]
-        public bool createInspection(Guid id, InspectionCreateModel model)
+        public async Task<ResponseModel> createInspection(Guid id, InspectionCreateModel model)
         {
-            return _patientService.createInspection(id, model);
-        }
+            var response = await _patientService.createInspection(id, model);
 
+            return response;
+        }
+        // !!!!!!!!!!!!
         [HttpGet("{id}/inspections")]
         public InspectionPagedListModel getInspections(
             Guid id,
@@ -48,9 +82,18 @@ namespace MIS.Controllers
         }
 
         [HttpGet("{id}")]
-        public PatientModel getPatient(Guid id)
+        public async Task<ActionResult<PatientModel>> getPatient(Guid id)
         {
-            return _patientService.getPatient(id);
+            var patient = await _patientService.getPatient(id);
+
+            if (patient == null)
+            {
+                return StatusCode(404, new ResponseModel { status = "404", message = "Not Found" });
+            }
+            else
+            {
+                return patient;
+            }
         }
 
         [HttpGet("{id}/inspections/search")]

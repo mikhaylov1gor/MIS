@@ -4,8 +4,10 @@
     "\\MIS",
     "\\MIS\\MIS",
     "\\MIS\\MIS\\Controllers",
-    "\\MIS\\MIS\\Models"
+    "\\MIS\\MIS\\Models",
+    "\\MIS\\MIS\\Models\\DB",
+    "\\MIS\\MIS\\Services"
   ],
-  "SelectedNode": "\\MIS\\MIS\\Controllers\\Consultation.cs",
+  "SelectedNode": "\\MIS\\MIS\\Models\\DB\\DbIcd10.cs",
   "PreviewInSolutionExplorer": false
 }

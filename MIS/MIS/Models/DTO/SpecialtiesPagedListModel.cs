@@ -2,7 +2,7 @@
 {
     public class SpecialtiesPagedListModel
     {
-        public List<SpecialityModel>? specialties { get; set; }
+        public List<SpecialtyModel>? specialties { get; set; }
         public PageInfoModel pagination { get; set; }
     }
 }

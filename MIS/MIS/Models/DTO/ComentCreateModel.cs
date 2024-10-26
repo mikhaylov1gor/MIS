@@ -6,7 +6,7 @@ namespace MIS.Models.DTO
     public class CommentCreateModel
     {
         [MaxLength(1000)]
-        private string? content { get; set; }
-        private Guid? parentId { get; set; }
+        public string? content { get; set; }
+        public Guid? parentId { get; set; }
     }
 }

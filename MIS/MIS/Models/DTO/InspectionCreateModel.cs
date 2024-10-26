@@ -17,7 +17,7 @@ namespace MIS.Models.DTO
         public Guid? previousInspectionId { get; set; }
         [MinLength(1)]
         public List<DiagnosisCreateModel> diagnosis { get; set; }
-        public List<ConsultationCreateModel>? consultation { get; set; }
+        public List<ConsultationCreateModel>? consultations { get; set; }
 
     }
 }

@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
+using MIS.Models.DB;
 using MIS.Models.DTO;
 using MIS.Services;
+using System.Numerics;
 
 namespace MIS.Controllers
 {
@@ -10,18 +12,53 @@ namespace MIS.Controllers
     [ApiController]
     public class Doctor : ControllerBase
     {
-        private DoctorService _doctorService;
+        private IDoctorService _doctorService;
 
-        [HttpPost("/register")]
-        public bool register(DoctorRegisterModel doctor)
+        public Doctor(IDoctorService _service)
         {
-            return _doctorService.register(doctor);
+            _doctorService = _service;
+        }
+        
+        // регистрация доктора
+        [HttpPost("/register")]
+        public async Task<IActionResult> register(DoctorRegisterModel doctor)
+        {
+            if (!ModelState.IsValid)
+            {
+                return StatusCode(401, new ResponseModel { status = "401", message = "model is incorrect" });
+            }
+
+            try
+            {
+                await _doctorService.register(doctor);
+                return Ok(new ResponseModel { status = "200", message = "Doctor was registered" });
+            }
+
+            catch (Exception ex)
+            {
+                return StatusCode(400, new ResponseModel { status = "400", message = "Invalid arguments"});
+            }
         }
 
+        // логин
         [HttpPost("/login")]
-        public bool login(LoginCredentialsModel loginCredentials)
+        public async Task<IActionResult> login(LoginCredentialsModel loginCredentials)
         {
-            return _doctorService.login(loginCredentials);
+            if (!ModelState.IsValid)
+            {
+                return StatusCode(401, new ResponseModel { status = "401", message = "model is incorrect" });
+            }
+
+            try
+            {
+                await _doctorService.login(loginCredentials);
+                return Ok(new TokenResponseModel ());
+            }
+
+            catch (Exception ex)
+            {
+                return StatusCode(400, new ResponseModel { status = "400", message = "Invalid arguments" });
+            }
         }
 
         [HttpPost("/logout")]

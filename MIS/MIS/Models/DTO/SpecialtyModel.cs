@@ -2,7 +2,7 @@
 
 namespace MIS.Models.DTO
 {
-    public class SpecialityModel
+    public class SpecialtyModel
     {
         public Guid id { get; set; }
         public DateTime createTime { get; set; }

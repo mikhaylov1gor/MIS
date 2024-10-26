@@ -1,31 +1,169 @@
-﻿using MIS.Models.DTO;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using MIS.Models.DB;
+using MIS.Models.DTO;
+using System.Threading.Tasks;
 
 namespace MIS.Services
 {
     public interface IInspectionService
     {
-        InspectionModel getInspection(Guid id);
+        Task<InspectionModel> getInspection(Guid id);
 
-        bool editInspection(Guid id, InspectionEditModel inspectionEdit);
+        Task<ResponseModel> editInspection(Guid id, InspectionEditModel inspectionEdit);
 
-        InspectionPreviewModel[] getChainInspections(Guid id);
+        Task<List<InspectionPreviewModel>> getChain(Guid id);
 
     }
     public class InspectionService : IInspectionService
     {
-        public InspectionModel getInspection(Guid id)
+        private readonly MisDbContext _context;
+
+        public InspectionService(MisDbContext context)
         {
-            return null;
+            _context = context;
+        }
+        public async Task<InspectionModel> getInspection(Guid id)
+        {
+            var model = await _context.Inspections.FindAsync(id);
+
+            if (model == null)
+            {
+                return null;
+            }
+
+            var inspection = new InspectionModel
+            {
+                id = id,
+                createTime = model.createTime,
+                date = model.date,
+                anamnesis = model.anamnesis,
+                complaints = model.complaints,
+                treatment = model.treatment,
+                conclusion = model.conclusion,
+                nextVisitDate = model.nextVisitDate,
+                deathDate = model.deathDate,
+                baseInspectionId = model.baseInspectionId,
+                previousInspectionId = model.previousInspectionId,
+                patient = new PatientModel
+                {
+                    id = model.patient.id,
+                    createTime = model.patient.createTime,
+                    name = model.patient.name,
+                    birthday = model.patient.birthday,
+                    gender = model.patient.gender,
+                },
+                doctor = new DoctorModel
+                {
+                    id = model.doctor.id,
+                    createTime = model.doctor.createTime,
+                    name = model.doctor.name,
+                    birthday = model.doctor.birthday,
+                    gender = model.doctor.gender,
+                    email = model.doctor.email,
+                    phone = model.doctor.phone,
+                },
+                diagnoses = model.diagnoses?
+                                .Select(d => new DiagnosisModel
+                                {
+                                    id = d.id,
+                                    createTime = d.createTime,
+                                    code = d.code,
+                                    name = d.name,
+                                    description = d.description,
+                                    type = d.type
+                                }).ToList(),
+                consultations = model.consultations,
+            };
+
+            return inspection;
+
         }
 
-        public bool editInspection (Guid id, InspectionEditModel inspectionEdit)
+        public async Task<ResponseModel> editInspection(Guid id, InspectionEditModel inspectionEdit)
         {
-            return true;
+            var inspection = await _context.Inspections.FindAsync(id);
+
+            if (inspection == null)
+            {
+                return new ResponseModel { status = "404", message = "Not Found" };
+            }
+            else
+            {
+                inspection.anamnesis = inspectionEdit.anamnesis;
+                inspection.complaints = inspectionEdit.complaints;
+                inspection.treatment = inspectionEdit.treatment;
+                inspection.conclusion = inspectionEdit.conclusion;
+                inspection.nextVisitDate = inspectionEdit.nextVisitDate;
+                inspection.deathDate = inspectionEdit.deathDate;
+
+                inspection.diagnoses = new List<DbDiagnosis>();
+                foreach (var d in inspectionEdit.diagnosis)
+                {
+                    var icd10Record = await _context.Icd10.FindAsync(d.icdDiagnosisId);
+                    if (icd10Record != null)
+                    {
+                        inspection.diagnoses.Add(new DbDiagnosis
+                        {
+                            createTime = DateTime.Now,
+                            code = icd10Record.code,
+                            name = icd10Record.name,
+                            description = d.description,
+                            type = d.type,
+                        });
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+                return new ResponseModel { status = "200", message = "Success" };
+            }
         }
 
-        public InspectionPreviewModel[] getChainInspections(Guid id)
+        public async Task<List<InspectionPreviewModel>> getChain(Guid id)
         {
-            return null;
+            var rootInspection = await _context.Inspections.FindAsync(id);
+
+            if (rootInspection == null)
+            {
+                return null;
+            }
+
+            var inspections = new List<InspectionPreviewModel>();
+            while (rootInspection.previousInspectionId != null || rootInspection.id != rootInspection.baseInspectionId)
+            {
+                var firstDiagnosis = rootInspection.diagnoses[0];
+                inspections.Add(new InspectionPreviewModel
+                {
+                    id = rootInspection.id,
+                    createTime = rootInspection.createTime,
+                    previousId = rootInspection.previousInspectionId,
+                    date = rootInspection.date,
+                    conclusion = rootInspection.conclusion,
+                    doctorId = rootInspection.doctor.id,
+                    patientId = rootInspection.patient.id,
+                    diagnosis = new DiagnosisModel
+                    {
+                        id = firstDiagnosis.id,
+                        createTime = firstDiagnosis.createTime,
+                        code = firstDiagnosis.code,
+                        name = firstDiagnosis.name,
+                        description = firstDiagnosis.description,
+                        type = firstDiagnosis.type,
+                    },
+                    hasChain = (rootInspection.previousInspectionId  != null),
+                    hasNested = (rootInspection.nextVisitDate != null),
+                });
+            }
+
+            if (inspections == null)
+            {
+                return null;
+            }
+            else
+            {
+                return inspections;
+            }
         }
     }
 }

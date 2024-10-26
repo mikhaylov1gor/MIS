@@ -5,7 +5,7 @@ namespace MIS.Models.DB
 {
     public class DbPatient
     {
-        public Guid id { get; set; }
+        public Guid id { get; private set; }
         public DateTime createTime { get; set; }
         [MinLength(1)]
         public string name { get; set; }

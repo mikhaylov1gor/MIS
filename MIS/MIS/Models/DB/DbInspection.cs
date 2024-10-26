@@ -19,7 +19,7 @@ namespace MIS.Models.DB
         public DbPatient patient { get; set; }
         public DbDoctor doctor { get; set; }
         [MinLength(1)]
-        public List<DbDiagnosis> diagnoses { get; set; }
+        public List<DbDiagnosis>? diagnoses { get; set; }
         public List<InspectionConsultationModel>? consultations { get; set; }
     }
 }

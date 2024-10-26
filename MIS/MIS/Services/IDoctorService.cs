@@ -1,12 +1,13 @@
-﻿using MIS.Models.DTO;
+﻿using MIS.Models.DB;
+using MIS.Models.DTO;
 
 namespace MIS.Services
 {
     public interface IDoctorService
     {
-        bool register(DoctorRegisterModel doctor);
+        Task register(DoctorRegisterModel doctor);
 
-        bool login(LoginCredentialsModel loginCredentials);
+        Task login(LoginCredentialsModel loginCredentials);
 
         bool logout();
 
@@ -16,14 +17,26 @@ namespace MIS.Services
     }
     public class DoctorService : IDoctorService
     {
-        public bool register(DoctorRegisterModel doctor)
+        private readonly MisDbContext _context;
+
+        public DoctorService(MisDbContext context)
         {
-            return true;
+            _context = context;
         }
 
-        public bool login(LoginCredentialsModel loginCredentials)
+        // регистрация доктора
+        public async Task register(DoctorRegisterModel doctor)
         {
-            return true;
+            DbDoctor newDoctor = new DbDoctor{ birthday = doctor.birthday, createTime = DateTime.Now, 
+                                               email = doctor.email, gender = doctor.gender, name = doctor.name, phone = doctor.phone};
+
+            await _context.Doctors.AddAsync(newDoctor);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task login(LoginCredentialsModel loginCredentials)
+        {
+            await _context.SaveChangesAsync();
         }
 
         public bool logout()

@@ -4,7 +4,7 @@ namespace MIS.Models.DTO
 {
     public class CommentModel
     {
-        public Guid id { get; private set; }
+        public Guid id { get; set; }
         public DateTime createTime { get; set; }
         public DateTime? modifiedDate { get; set; }
 
