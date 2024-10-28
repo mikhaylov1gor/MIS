@@ -15,5 +15,7 @@ namespace MIS.Models.DB
         public string email { get; set; }
         [Phone]
         public string? phone { get; set; }
+        public string passwordHash { get; set; }
+        public Guid specialtyId { get; set; }
     }
 }

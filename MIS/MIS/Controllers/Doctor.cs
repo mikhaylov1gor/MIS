@@ -21,17 +21,16 @@ namespace MIS.Controllers
         
         // регистрация доктора
         [HttpPost("/register")]
-        public async Task<IActionResult> register(DoctorRegisterModel doctor)
+        public async Task<ActionResult<ResponseModel>> register(DoctorRegisterModel doctor)
         {
             if (!ModelState.IsValid)
             {
                 return StatusCode(401, new ResponseModel { status = "401", message = "model is incorrect" });
             }
-
-            try
+                       try
             {
-                await _doctorService.register(doctor);
-                return Ok(new ResponseModel { status = "200", message = "Doctor was registered" });
+                var response = await _doctorService.register(doctor);
+                return response;
             }
 
             catch (Exception ex)
@@ -42,23 +41,16 @@ namespace MIS.Controllers
 
         // логин
         [HttpPost("/login")]
-        public async Task<IActionResult> login(LoginCredentialsModel loginCredentials)
+        public async Task<ActionResult<TokenResponseModel>> login(LoginCredentialsModel loginCredentials)
         {
-            if (!ModelState.IsValid)
+            var token = await _doctorService.login(loginCredentials);
+
+            if (token == null) 
             {
-                return StatusCode(401, new ResponseModel { status = "401", message = "model is incorrect" });
+                return StatusCode(401, new ResponseModel { status = "401", message = "Password or email is incorrect" });
             }
 
-            try
-            {
-                await _doctorService.login(loginCredentials);
-                return Ok(new TokenResponseModel ());
-            }
-
-            catch (Exception ex)
-            {
-                return StatusCode(400, new ResponseModel { status = "400", message = "Invalid arguments" });
-            }
+            return Ok(token);
         }
 
         [HttpPost("/logout")]

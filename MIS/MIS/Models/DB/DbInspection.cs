@@ -20,6 +20,6 @@ namespace MIS.Models.DB
         public DbDoctor doctor { get; set; }
         [MinLength(1)]
         public List<DbDiagnosis>? diagnoses { get; set; }
-        public List<InspectionConsultationModel>? consultations { get; set; }
+        public List<DbInspectionConsultation>? consultations { get; set; }
     }
 }

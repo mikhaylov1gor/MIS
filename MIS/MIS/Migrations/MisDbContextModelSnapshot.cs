@@ -136,8 +136,15 @@ namespace MIS.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("passwordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("phone")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("specialtyId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("id");
 
@@ -215,6 +222,69 @@ namespace MIS.Migrations
                     b.ToTable("Inspections");
                 });
 
+            modelBuilder.Entity("MIS.Models.DB.DbInspectionComment", b =>
+                {
+                    b.Property<Guid>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("authorid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("createTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("modifyTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("parentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("authorid");
+
+                    b.ToTable("InspectionComments");
+                });
+
+            modelBuilder.Entity("MIS.Models.DB.DbInspectionConsultation", b =>
+                {
+                    b.Property<Guid>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("DbInspectionid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("commentsNumber")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("createTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("inspectionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("rootCommentid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("specialityid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("DbInspectionid");
+
+                    b.HasIndex("rootCommentid");
+
+                    b.HasIndex("specialityid");
+
+                    b.ToTable("InspetionConsultations");
+                });
+
             modelBuilder.Entity("MIS.Models.DB.DbPatient", b =>
                 {
                     b.Property<Guid>("id")
@@ -255,118 +325,6 @@ namespace MIS.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Specialties");
-                });
-
-            modelBuilder.Entity("MIS.Models.DTO.DoctorModel", b =>
-                {
-                    b.Property<Guid>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("birthday")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("createTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("gender")
-                        .HasColumnType("int");
-
-                    b.Property<string>("name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("phone")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("DoctorModel");
-                });
-
-            modelBuilder.Entity("MIS.Models.DTO.InspectionCommentModel", b =>
-                {
-                    b.Property<Guid>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("authorid")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("content")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("createTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("modifyTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("parentId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("authorid");
-
-                    b.ToTable("InspectionCommentModel");
-                });
-
-            modelBuilder.Entity("MIS.Models.DTO.InspectionConsultationModel", b =>
-                {
-                    b.Property<Guid>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("DbInspectionid")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("commentsNumber")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("createTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("inspectionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("rootCommentid")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("specialityid")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("DbInspectionid");
-
-                    b.HasIndex("rootCommentid");
-
-                    b.HasIndex("specialityid");
-
-                    b.ToTable("InspectionConsultationModel");
-                });
-
-            modelBuilder.Entity("MIS.Models.DTO.SpecialityModel", b =>
-                {
-                    b.Property<Guid>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("createTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("SpecialityModel");
                 });
 
             modelBuilder.Entity("MIS.Models.DB.DbComment", b =>
@@ -413,9 +371,9 @@ namespace MIS.Migrations
                     b.Navigation("patient");
                 });
 
-            modelBuilder.Entity("MIS.Models.DTO.InspectionCommentModel", b =>
+            modelBuilder.Entity("MIS.Models.DB.DbInspectionComment", b =>
                 {
-                    b.HasOne("MIS.Models.DTO.DoctorModel", "author")
+                    b.HasOne("MIS.Models.DB.DbDoctor", "author")
                         .WithMany()
                         .HasForeignKey("authorid")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -424,19 +382,19 @@ namespace MIS.Migrations
                     b.Navigation("author");
                 });
 
-            modelBuilder.Entity("MIS.Models.DTO.InspectionConsultationModel", b =>
+            modelBuilder.Entity("MIS.Models.DB.DbInspectionConsultation", b =>
                 {
                     b.HasOne("MIS.Models.DB.DbInspection", null)
                         .WithMany("consultations")
                         .HasForeignKey("DbInspectionid");
 
-                    b.HasOne("MIS.Models.DTO.InspectionCommentModel", "rootComment")
+                    b.HasOne("MIS.Models.DB.DbInspectionComment", "rootComment")
                         .WithMany()
                         .HasForeignKey("rootCommentid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MIS.Models.DTO.SpecialityModel", "speciality")
+                    b.HasOne("MIS.Models.DB.DbSpecialty", "speciality")
                         .WithMany()
                         .HasForeignKey("specialityid")
                         .OnDelete(DeleteBehavior.Cascade)

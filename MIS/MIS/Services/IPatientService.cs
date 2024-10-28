@@ -113,7 +113,7 @@ namespace MIS.Services
                 //doctor
             };
 
-            inspection.consultations = new List<InspectionConsultationModel>();
+            inspection.consultations = new List<DbInspectionConsultation>();
             foreach (var d in model.consultations)
             {
                 var DBSpecialty = await _context.Specialties.FindAsync(d.specialityId);
@@ -121,11 +121,11 @@ namespace MIS.Services
                 {
                     return new ResponseModel { status = "404", message = "Specialty Not Found" };
                 }
-                inspection.consultations.Add(new InspectionConsultationModel
+                inspection.consultations.Add(new DbInspectionConsultation
                 {
                     createTime = DateTime.Now,
                     inspectionId = inspection.id,
-                    speciality = new SpecialtyModel
+                    speciality = new DbSpecialty
                     {
                         createTime = DBSpecialty.createTime,
                         name = DBSpecialty.name

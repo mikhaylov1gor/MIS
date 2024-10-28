@@ -3,6 +3,7 @@ using MIS.Services;
 using MIS.Models;
 using MIS.Models.DB;
 using Microsoft.EntityFrameworkCore;
+using MIS.Infrastucture;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,10 @@ builder.Services.AddScoped<IDoctorService, DoctorService>();
 builder.Services.AddScoped<IInspectionService, InspectionService>();
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+builder.Services.AddScoped<IJwtProvider, JwtProvider>();
+
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(nameof(JwtOptions)));
 
 var app = builder.Build();
 

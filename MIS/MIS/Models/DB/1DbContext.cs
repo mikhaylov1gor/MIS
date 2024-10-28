@@ -12,6 +12,9 @@ namespace MIS.Models.DB
         public DbSet<DbIcd10> Icd10 { get; set; }
 
         public DbSet<DbInspection> Inspections { get; set; }
+        public DbSet<DbInspectionComment> InspectionComments { get; set; }
+        public DbSet<DbInspectionConsultation> InspetionConsultations { get; set; }
+
         public DbSet<DbPatient> Patients { get; set; }
         public DbSet<DbSpecialty> Specialties { get; set; }
 

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using MIS.Models.DB;
 using MIS.Models.DTO;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace MIS.Services
 {
@@ -32,6 +33,48 @@ namespace MIS.Services
             {
                 return null;
             }
+
+            var transformedConsultations = model.consultations?.Select(c => new InspectionConsultationModel
+            {
+                id = c.id,
+                createTime = c.createTime,
+                inspectionId = c.inspectionId,
+                speciality = new SpecialtyModel
+                {
+                    id = c.speciality.id,
+                    createTime = c.speciality.createTime,
+                    name = c.speciality.name,
+                },
+                rootComment = new InspectionCommentModel
+                {
+                    id = c.rootComment.id,
+                    createTime = c.rootComment.createTime,
+                    parentId = c.rootComment.parentId,
+                    content = c.rootComment.content,
+                    author = new DoctorModel
+                    {
+                        id = c.rootComment.author.id,
+                        createTime = c.rootComment.author.createTime,
+                        name = c.rootComment.author.name,
+                        birthday = c.rootComment.author.birthday,
+                        gender = c.rootComment.author.gender,
+                        email = c.rootComment.author.email,
+                        phone = c.rootComment.author.phone,
+                    }
+                },
+                commentsNumber = c.commentsNumber,
+            }).ToList();
+
+            var transformedDiagnoses = model.diagnoses
+                                .Select(d => new DiagnosisModel
+                                {
+                                    id = d.id,
+                                    createTime = d.createTime,
+                                    code = d.code,
+                                    name = d.name,
+                                    description = d.description,
+                                    type = d.type
+                                }).ToList();
 
             var inspection = new InspectionModel
             {
@@ -64,17 +107,8 @@ namespace MIS.Services
                     email = model.doctor.email,
                     phone = model.doctor.phone,
                 },
-                diagnoses = model.diagnoses?
-                                .Select(d => new DiagnosisModel
-                                {
-                                    id = d.id,
-                                    createTime = d.createTime,
-                                    code = d.code,
-                                    name = d.name,
-                                    description = d.description,
-                                    type = d.type
-                                }).ToList(),
-                consultations = model.consultations,
+                diagnoses = transformedDiagnoses,
+                consultations = transformedConsultations,
             };
 
             return inspection;

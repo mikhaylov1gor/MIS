@@ -6,28 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MIS.Migrations
 {
     /// <inheritdoc />
-    public partial class MISDataBase : Migration
+    public partial class CreateDataBase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "DoctorModel",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    createTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    birthday = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    gender = table.Column<int>(type: "int", nullable: false),
-                    email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    phone = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DoctorModel", x => x.id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Doctors",
                 columns: table => new
@@ -38,7 +21,9 @@ namespace MIS.Migrations
                     birthday = table.Column<DateTime>(type: "datetime2", nullable: true),
                     gender = table.Column<int>(type: "int", nullable: false),
                     email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    phone = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    passwordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    specialtyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -75,19 +60,6 @@ namespace MIS.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SpecialityModel",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    createTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    name = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SpecialityModel", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Specialties",
                 columns: table => new
                 {
@@ -101,7 +73,7 @@ namespace MIS.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "InspectionCommentModel",
+                name: "InspectionComments",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -113,11 +85,11 @@ namespace MIS.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_InspectionCommentModel", x => x.id);
+                    table.PrimaryKey("PK_InspectionComments", x => x.id);
                     table.ForeignKey(
-                        name: "FK_InspectionCommentModel_DoctorModel_authorid",
+                        name: "FK_InspectionComments_Doctors_authorid",
                         column: x => x.authorid,
-                        principalTable: "DoctorModel",
+                        principalTable: "Doctors",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -200,7 +172,7 @@ namespace MIS.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "InspectionConsultationModel",
+                name: "InspetionConsultations",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -213,22 +185,22 @@ namespace MIS.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_InspectionConsultationModel", x => x.id);
+                    table.PrimaryKey("PK_InspetionConsultations", x => x.id);
                     table.ForeignKey(
-                        name: "FK_InspectionConsultationModel_InspectionCommentModel_rootCommentid",
+                        name: "FK_InspetionConsultations_InspectionComments_rootCommentid",
                         column: x => x.rootCommentid,
-                        principalTable: "InspectionCommentModel",
+                        principalTable: "InspectionComments",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_InspectionConsultationModel_Inspections_DbInspectionid",
+                        name: "FK_InspetionConsultations_Inspections_DbInspectionid",
                         column: x => x.DbInspectionid,
                         principalTable: "Inspections",
                         principalColumn: "id");
                     table.ForeignKey(
-                        name: "FK_InspectionConsultationModel_SpecialityModel_specialityid",
+                        name: "FK_InspetionConsultations_Specialties_specialityid",
                         column: x => x.specialityid,
-                        principalTable: "SpecialityModel",
+                        principalTable: "Specialties",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -272,24 +244,9 @@ namespace MIS.Migrations
                 column: "DbInspectionid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_InspectionCommentModel_authorid",
-                table: "InspectionCommentModel",
+                name: "IX_InspectionComments_authorid",
+                table: "InspectionComments",
                 column: "authorid");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_InspectionConsultationModel_DbInspectionid",
-                table: "InspectionConsultationModel",
-                column: "DbInspectionid");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_InspectionConsultationModel_rootCommentid",
-                table: "InspectionConsultationModel",
-                column: "rootCommentid");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_InspectionConsultationModel_specialityid",
-                table: "InspectionConsultationModel",
-                column: "specialityid");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Inspections_doctorid",
@@ -300,6 +257,21 @@ namespace MIS.Migrations
                 name: "IX_Inspections_patientid",
                 table: "Inspections",
                 column: "patientid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_InspetionConsultations_DbInspectionid",
+                table: "InspetionConsultations",
+                column: "DbInspectionid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_InspetionConsultations_rootCommentid",
+                table: "InspetionConsultations",
+                column: "rootCommentid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_InspetionConsultations_specialityid",
+                table: "InspetionConsultations",
+                column: "specialityid");
         }
 
         /// <inheritdoc />
@@ -315,25 +287,19 @@ namespace MIS.Migrations
                 name: "Icd10");
 
             migrationBuilder.DropTable(
-                name: "InspectionConsultationModel");
+                name: "InspetionConsultations");
 
             migrationBuilder.DropTable(
                 name: "Consultations");
 
             migrationBuilder.DropTable(
-                name: "InspectionCommentModel");
+                name: "InspectionComments");
 
             migrationBuilder.DropTable(
                 name: "Inspections");
 
             migrationBuilder.DropTable(
-                name: "SpecialityModel");
-
-            migrationBuilder.DropTable(
                 name: "Specialties");
-
-            migrationBuilder.DropTable(
-                name: "DoctorModel");
 
             migrationBuilder.DropTable(
                 name: "Doctors");
