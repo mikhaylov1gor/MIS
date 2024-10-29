@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MIS.Migrations
 {
     [DbContext(typeof(MisDbContext))]
-    [Migration("20241028192239_CreateDataBase")]
-    partial class CreateDataBase
+    [Migration("20241029202214_createDB")]
+    partial class createDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -169,7 +169,16 @@ namespace MIS.Migrations
                     b.Property<string>("name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("parentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("recordCode")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("id");
+
+                    b.HasIndex("parentId")
+                        .HasDatabaseName("IX_icd10_parentId");
 
                     b.ToTable("Icd10");
                 });
@@ -330,6 +339,21 @@ namespace MIS.Migrations
                     b.ToTable("Specialties");
                 });
 
+            modelBuilder.Entity("MIS.Models.DB.DbTokenBlackList", b =>
+                {
+                    b.Property<Guid>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("TokenBlackList");
+                });
+
             modelBuilder.Entity("MIS.Models.DB.DbComment", b =>
                 {
                     b.HasOne("MIS.Models.DB.DbConsultation", null)
@@ -364,7 +388,7 @@ namespace MIS.Migrations
                         .IsRequired();
 
                     b.HasOne("MIS.Models.DB.DbPatient", "patient")
-                        .WithMany()
+                        .WithMany("inspections")
                         .HasForeignKey("patientid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -418,6 +442,11 @@ namespace MIS.Migrations
                     b.Navigation("consultations");
 
                     b.Navigation("diagnoses");
+                });
+
+            modelBuilder.Entity("MIS.Models.DB.DbPatient", b =>
+                {
+                    b.Navigation("inspections");
                 });
 #pragma warning restore 612, 618
         }

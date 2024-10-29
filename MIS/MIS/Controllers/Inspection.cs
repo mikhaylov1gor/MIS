@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MIS.Models.DB;
 using MIS.Models.DTO;
@@ -17,6 +18,8 @@ namespace MIS.Controllers
             _inspectionService = _service;
         }
 
+
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<InspectionModel>> getInspection(Guid id)
         {
@@ -32,6 +35,7 @@ namespace MIS.Controllers
             }
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<ActionResult<ResponseModel>>  editInspection(Guid id, InspectionEditModel inspectionEdit)
         {
@@ -40,6 +44,7 @@ namespace MIS.Controllers
             return response;
         }
 
+        [Authorize]
         [HttpGet("{id}/chain")]
         public async Task<ActionResult<InspectionPreviewModel>> getChainInspections(Guid id)
         {

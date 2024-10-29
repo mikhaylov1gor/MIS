@@ -11,5 +11,6 @@ namespace MIS.Models.DB
         public string name { get; set; }
         public DateTime? birthday { get; set; }
         public Gender gender { get; set; }
+        public List<DbInspection>? inspections { get; set; }
     }
 }

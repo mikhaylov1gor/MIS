@@ -18,7 +18,7 @@ namespace MIS.Services
                 [FromQuery] int page,
                 [FromQuery] int size);
 
-        Icd10RecordModel[] getIcdList();
+        Task<List<Icd10RecordModel>> getIcdRoots();
     }
     public class DictionaryService : IDictionaryService
     {
@@ -90,9 +90,16 @@ namespace MIS.Services
             };
         }
 
-        public Icd10RecordModel[] getIcdList()
+        public async Task<List<Icd10RecordModel>> getIcdRoots()
         {
-            return null;
+            var dbList = _context.Icd10
+                    .Where(i => i.parentId == null);
+
+            var dtoList = await dbList
+                .Select(i => new Icd10RecordModel { id = i.id, createTime = i.createTime, name = i.name, code = i.code })
+                .ToListAsync();
+
+            return dtoList;
         }
 
     }

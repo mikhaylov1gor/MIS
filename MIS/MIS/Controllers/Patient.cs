@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MIS.Models.DB;
 using MIS.Models.DTO;
@@ -18,28 +19,16 @@ namespace MIS.Controllers
         }
 
         // создать пациента
+        [Authorize]
         [HttpPost]
-        public async Task<IActionResult> createPatient(PatientCreateModel patient)
+        public async Task<ActionResult<Guid>> createPatient(PatientCreateModel patient)
         {
-            if (!ModelState.IsValid)
-            {
-                return StatusCode(401, new ResponseModel { status = "401" , message = "model is incorrect"});
-            }
-
-            try
-            {
-                await _patientService.createPatient(patient);
-                return Ok(new ResponseModel { status = "200", message = "Success"});
-            }
-
-            catch (Exception ex)
-            {
-                ResponseModel model = new ResponseModel();
-                return StatusCode(500, model);
-            }
+            return await _patientService.createPatient(patient);
+            
         }
 
         // получить лист пациентов
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<PatientPagedListModel>> getPatients(
             [FromQuery] string name,
@@ -50,7 +39,7 @@ namespace MIS.Controllers
             [FromQuery] int page = 1,
             [FromQuery] int size = 5)
         {
-            var patients = await _patientService.getPatients(name, conclusions, sorting, scheduledVisits, onlyMine, page, size);
+            var patients = await _patientService.getPatients(name, conclusions, sorting, scheduledVisits, onlyMine, page, size, User);
 
             if (patients == null)
             {
@@ -62,14 +51,14 @@ namespace MIS.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost("{id}/inspections")]
-        public async Task<ResponseModel> createInspection(Guid id, InspectionCreateModel model)
+        public async Task<Guid> createInspection(Guid id, InspectionCreateModel model)
         {
-            var response = await _patientService.createInspection(id, model);
-
-            return response;
+            return await _patientService.createInspection(id, model, User);
         }
         // !!!!!!!!!!!!
+        [Authorize]
         [HttpGet("{id}/inspections")]
         public InspectionPagedListModel getInspections(
             Guid id,
@@ -81,6 +70,7 @@ namespace MIS.Controllers
             return _patientService.getInspections(id, grouped, icdRoots, page, size);
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<PatientModel>> getPatient(Guid id)
         {
@@ -96,10 +86,11 @@ namespace MIS.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet("{id}/inspections/search")]
-        public IEnumerable<InspectionShortModel> getShortInspection(Guid id, [FromQuery] string request)
+        public async Task<List<InspectionShortModel>> getShortInspection(Guid id, [FromQuery] string request)
         {
-            return _patientService.getShortInspection(id, request);
+            return await _patientService.getShortInspection(id, request);
         }
     }
 }

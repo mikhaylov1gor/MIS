@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\mikha\\Source\\Repos\\webNET-2024_aspnet_1\\MIS\\MIS\\MIS.csproj": {}
+    "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\MIS.csproj": {}
   },
   "projects": {
-    "C:\\Users\\mikha\\Source\\Repos\\webNET-2024_aspnet_1\\MIS\\MIS\\MIS.csproj": {
+    "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\MIS.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mikha\\Source\\Repos\\webNET-2024_aspnet_1\\MIS\\MIS\\MIS.csproj",
+        "projectUniqueName": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\MIS.csproj",
         "projectName": "MIS",
-        "projectPath": "C:\\Users\\mikha\\Source\\Repos\\webNET-2024_aspnet_1\\MIS\\MIS\\MIS.csproj",
+        "projectPath": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\MIS.csproj",
         "packagesPath": "C:\\Users\\mikha\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mikha\\Source\\Repos\\webNET-2024_aspnet_1\\MIS\\MIS\\obj\\",
+        "outputPath": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\mikha\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -50,6 +50,10 @@
               "target": "Package",
               "version": "[4.0.3, )"
             },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[8.0.10, )"
+            },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[8.0.10, )"
@@ -69,6 +73,10 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[8.0.10, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",

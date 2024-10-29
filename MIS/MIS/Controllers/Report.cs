@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MIS.Models.DTO;
 using MIS.Services;
@@ -9,8 +10,14 @@ namespace MIS.Controllers
     [ApiController]
     public class ReportController : ControllerBase
     {
-        private ReportService _reportService;
+        private IReportService _reportService;
 
+        public ReportController(IReportService service)
+        {
+            _reportService = service;
+        }
+
+        [Authorize]
         [HttpGet("{id}/icdrootsreport")]
         public IcdRootsReportModel getReport(
             [FromQuery] DateTime start,

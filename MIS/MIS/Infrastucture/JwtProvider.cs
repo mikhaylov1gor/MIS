@@ -24,7 +24,11 @@ namespace MIS.Infrastucture
         // генерация токена
         public TokenResponseModel GenerateToken(DbDoctor doctor)
         {
-            Claim[] claims = [new("id", doctor.id.ToString())];
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, doctor.id.ToString()),
+                new Claim(ClaimTypes.Email, doctor.email),
+            };
 
             var signingCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey)),

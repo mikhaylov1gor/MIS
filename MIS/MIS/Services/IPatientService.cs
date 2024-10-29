@@ -1,25 +1,29 @@
 ﻿using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MIS.Models.DB;
 using MIS.Models.DTO;
+using System.Security.Claims;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace MIS.Services
 {
     public interface IPatientService
     {
-        Task createPatient(PatientCreateModel patient);
+        Task<Guid> createPatient(PatientCreateModel patient);
 
         Task<PatientPagedListModel> getPatients(
-            [FromQuery] string name,
-            [FromQuery] Conclusion[] conclusions,
-            [FromQuery] PatientSorting sorting,
-            [FromQuery] bool scheduledVisits,
-            [FromQuery] bool onlyMine,
-            [FromQuery] int page,
-            [FromQuery] int size);
+                    [FromQuery] string name,
+                    [FromQuery] Conclusion[] conclusions,
+                    [FromQuery] PatientSorting sorting,
+                    [FromQuery] bool scheduledVisits,
+                    [FromQuery] bool onlyMine,
+                    [FromQuery] int page,
+                    [FromQuery] int size,
+                    ClaimsPrincipal user);
 
-        Task<ResponseModel> createInspection(Guid id, InspectionCreateModel model);
+        Task<Guid> createInspection(Guid id, InspectionCreateModel model, ClaimsPrincipal user);
 
         InspectionPagedListModel getInspections(
             Guid id,
@@ -30,7 +34,7 @@ namespace MIS.Services
 
         Task<PatientModel> getPatient(Guid id);
 
-        InspectionShortModel[] getShortInspection(Guid id, [FromQuery] string request);
+        Task<List<InspectionShortModel>> getShortInspection(Guid id, string request);
     }
 
     public class PatientService : IPatientService
@@ -43,14 +47,17 @@ namespace MIS.Services
         }
 
         // Создать пациента
-        public async Task createPatient(PatientCreateModel patient)
+        public async Task<Guid> createPatient(PatientCreateModel patient)
         {
             DbPatient newPatient = new DbPatient { createTime = DateTime.Now, birthday = patient.birthday, name = patient.name, gender = patient.gender };
 
             await _context.Patients.AddAsync(newPatient);
             await _context.SaveChangesAsync();
+
+            return newPatient.id;
         }
 
+        // получить лист пациентов
         public async Task<PatientPagedListModel> getPatients(
             [FromQuery] string name,
             [FromQuery] Conclusion[] conclusions,
@@ -58,10 +65,67 @@ namespace MIS.Services
             [FromQuery] bool scheduledVisits,
             [FromQuery] bool onlyMine,
             [FromQuery] int page,
-            [FromQuery] int size)
+            [FromQuery] int size,
+            ClaimsPrincipal user)
         {
+            // выборка по имени
             var query = _context.Patients
                 .Where(i => EF.Functions.Like(i.name, $"%{name}%"));
+
+            // выборка по заключениям
+            if (conclusions.Length > 0)
+            {
+                query = query
+                    .Where(p => p.inspections.Any(i => conclusions.Contains(i.conclusion)));
+            }
+
+            // выборка по доктору
+            if (onlyMine)
+            {
+                var doctorId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                query = query
+                    .Where(p => p.inspections.Any(d => d.doctor.id.ToString() == doctorId));
+            }
+
+            // выборка по предстоящему визиту
+            if (scheduledVisits)
+            {
+                query = query
+                    .Where(p => p.inspections.Any(n => n.nextVisitDate != null));
+            }
+
+            // сортировка
+            switch (sorting)
+            {
+                case PatientSorting.NameAsc:
+                    query = query.OrderBy(p => p.name);
+                    break;
+
+                case PatientSorting.NameDesc:
+                    query = query.OrderByDescending(p => p.name);
+                    break;
+
+                case PatientSorting.CreateAsc:
+                    query = query.OrderBy(p => p.createTime);
+                    break;
+
+                case PatientSorting.CreateDesc:
+                    query = query.OrderByDescending(p => p.createTime);
+                    break;
+
+/*                case PatientSorting.InspectionAcs:
+                    query = query.OrderBy(p => p.createTime);
+                    break;
+
+                case PatientSorting.InspectionDesc:
+                    query = query.OrderByDescending(p => p.createTime);
+                    break;*/
+
+                default:
+                    query = query.OrderBy(p => p.name);
+                    break;
+            }
 
             var totalItems = await query.CountAsync();
 
@@ -87,16 +151,36 @@ namespace MIS.Services
             };
         }
 
-        public async Task<ResponseModel> createInspection(Guid id, InspectionCreateModel model)
+        // создать осмотр
+        public async Task<Guid> createInspection(Guid id, InspectionCreateModel model, ClaimsPrincipal user)
         {
+            // проверка на аутентификацию
+            var doctorId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (doctorId == null || !Guid.TryParse(doctorId, out var parsedId))
+            {
+                return Guid.Empty;
+            }
+
+            var doctor = await _context.Doctors
+                .FirstOrDefaultAsync(d => d.id == parsedId);
+
+            // проверка на наличие пациента
             var rootPatient = await _context.Patients.FindAsync(id);
 
             if (rootPatient == null)
             {
-                return new ResponseModel { status = "404", message = "Not Found" };
+                return Guid.Empty;
             }
 
+            // проверка предыдущего осмотра (проверка на смерть)
+            var previousInspection = await _context.Inspections.FindAsync(model.previousInspectionId);
 
+            if (previousInspection == null || previousInspection.conclusion == Conclusion.Death)
+            {
+                return Guid.Empty;
+            }
+
+            // создание модели осмотра
             var inspection = new DbInspection
             {
                 createTime = DateTime.Now,
@@ -107,37 +191,63 @@ namespace MIS.Services
                 conclusion = model.conclusion,
                 nextVisitDate = model.nextVisitDate,
                 deathDate = model.deathDate,
-                //baseInspectionId
                 previousInspectionId = model.previousInspectionId,
                 patient = rootPatient,
-                //doctor
+                doctor = doctor
             };
 
-            inspection.consultations = new List<DbInspectionConsultation>();
-            foreach (var d in model.consultations)
+            // рекурсивное нахождение основного осмотра
+            var baseInspectionId = inspection.previousInspectionId; 
+
+            while (inspection.previousInspectionId != null)
             {
-                var DBSpecialty = await _context.Specialties.FindAsync(d.specialityId);
+                var previousInspection = await _context.Inspections.FindAsync(inspection.previousInspectionId);
+
+                if (previousInspection == null) break;
+
+                baseInspectionId = previousInspection.previousInspectionId;
+            }
+
+            inspection.baseInspectionId = baseInspectionId;
+
+            // трансформация консультаций
+            inspection.consultations = new List<DbInspectionConsultation>();
+
+            foreach (var consultation in model.consultations)
+            {
+                var DBSpecialty = await _context.Specialties.FindAsync(consultation.specialityId);
                 if (DBSpecialty == null) 
                 {
-                    return new ResponseModel { status = "404", message = "Specialty Not Found" };
+                    return Guid.Empty;
                 }
                 inspection.consultations.Add(new DbInspectionConsultation
                 {
                     createTime = DateTime.Now,
                     inspectionId = inspection.id,
-                    speciality = new DbSpecialty
+                    speciality = DBSpecialty,
+                    rootComment = new DbInspectionComment
                     {
-                        createTime = DBSpecialty.createTime,
-                        name = DBSpecialty.name
-                    }
+                        createTime = DateTime.Now,
+                        parentId = null,
+                        content = consultation.comment.content,
+                        author = doctor,
+                        modifyTime = DateTime.Now,
+                    },
+                    commentsNumber = 1
                 });
             }
 
+            // трансформация диагнозов
             inspection.diagnoses = new List<DbDiagnosis>();
+
+            // добавить проверку на один мейн диагноз/одну смерть и т.д.
             foreach (var d in model.diagnosis)
             {
                 var icd10Record = await _context.Icd10.FindAsync(d.icdDiagnosisId);
-                if (icd10Record != null)
+                if (icd10Record == null)
+                {
+                    return Guid.Empty;
+                }
                 {
                     inspection.diagnoses.Add(new DbDiagnosis
                     {
@@ -147,17 +257,18 @@ namespace MIS.Services
                         description = d.description,
                         type = d.type
                     });
-                }
-            };
+
+                };
+            }
 
             await _context.AddAsync(inspection);
             await _context.SaveChangesAsync();
-            return new ResponseModel { status = "200", message = "Success" };
+            return inspection.id;
 
         }
         // !!!!!!!!!!!!
         public InspectionPagedListModel getInspections(
-            Guid id,
+            Guid PatientId,
             [FromQuery] bool grouped,
             [FromQuery] List<Guid> icdRoots,
             [FromQuery] int page,
@@ -189,9 +300,47 @@ namespace MIS.Services
             }
         }
 
-        public InspectionShortModel[] getShortInspection(Guid id, [FromQuery] string request)
+        public async Task<List<InspectionShortModel>> getShortInspection(Guid id, string request)
         {
-            return null;
+            var patient = await _context.Patients.FindAsync(id);
+
+            if (patient == null)
+            {
+                return null;
+            }
+
+            var query = patient.inspections
+                .Where(d => d.diagnoses.Any(r => EF.Functions.Like(r.name, $"%{request}") || EF.Functions.Like(r.code, $"%{request}")));
+
+            if (query.Count() == 0)
+            {
+                return null;
+            }
+            var inspections = new List<InspectionShortModel>();
+
+            foreach ( var inspectionDb in query)
+            {
+                var diagnosisDb = inspectionDb.diagnoses.FirstOrDefault(t => t.type == DiagnosisType.Main);
+                var diagnosis = new DiagnosisModel
+                {
+                    id = diagnosisDb.id,
+                    createTime = diagnosisDb.createTime,
+                    code = diagnosisDb.code,
+                    name = diagnosisDb.name,
+                    description = diagnosisDb.description,
+                    type = diagnosisDb.type,
+                };
+
+                var inspection = new InspectionShortModel
+                {
+                    id = inspectionDb.id,
+                    createTime = inspectionDb.createTime,
+                    date = inspectionDb.date,
+                    diagnosis = diagnosis
+                };
+            }  
+
+            return inspections;
         }
     }
 

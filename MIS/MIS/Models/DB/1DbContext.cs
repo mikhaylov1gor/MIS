@@ -18,9 +18,18 @@ namespace MIS.Models.DB
         public DbSet<DbPatient> Patients { get; set; }
         public DbSet<DbSpecialty> Specialties { get; set; }
 
+        public DbSet<DbTokenBlackList> TokenBlackList { get; set; }
+
         public MisDbContext(DbContextOptions<MisDbContext> options) : base(options)
         {
             Database.EnsureCreated();
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<DbIcd10>()
+                .HasIndex(e => e.parentId)
+                .HasDatabaseName("IX_icd10_parentId");
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using MIS.Models.DTO;
@@ -18,6 +19,7 @@ namespace MIS.Controllers
             _consultationService = _service;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<InspectionPagedListModel>> getList(
                 [FromQuery] bool grouped,
@@ -36,6 +38,7 @@ namespace MIS.Controllers
             return Ok(inspectionPagedList);
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<ConsultationModel>> getConsultationById(Guid id)
         {
@@ -49,6 +52,7 @@ namespace MIS.Controllers
             return Ok(inspection);
         }
 
+        [Authorize]
         [HttpPost("{id}/comment")]
         public async Task<ActionResult<ResponseModel>> postComment(Guid id, CommentCreateModel comment)
         {
@@ -57,6 +61,7 @@ namespace MIS.Controllers
             return Ok(response);
         }
 
+        [Authorize]
         [HttpPut("/comment/{id}")]
         public async Task<ActionResult<ResponseModel>> editComment(Guid id, InspectionCommentCreateModel comment)
         {

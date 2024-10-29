@@ -55,7 +55,7 @@ namespace MIS.Migrations
 
                     b.HasIndex("DbConsultationid");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("MIS.Models.DB.DbConsultation", b =>
@@ -77,7 +77,7 @@ namespace MIS.Migrations
 
                     b.HasIndex("specialityid");
 
-                    b.ToTable("Consultations");
+                    b.ToTable("Consultations", (string)null);
                 });
 
             modelBuilder.Entity("MIS.Models.DB.DbDiagnosis", b =>
@@ -110,7 +110,7 @@ namespace MIS.Migrations
 
                     b.HasIndex("DbInspectionid");
 
-                    b.ToTable("Diagnosis");
+                    b.ToTable("Diagnosis", (string)null);
                 });
 
             modelBuilder.Entity("MIS.Models.DB.DbDoctor", b =>
@@ -148,7 +148,7 @@ namespace MIS.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("Doctors");
+                    b.ToTable("Doctors", (string)null);
                 });
 
             modelBuilder.Entity("MIS.Models.DB.DbIcd10", b =>
@@ -166,9 +166,18 @@ namespace MIS.Migrations
                     b.Property<string>("name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("parentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("recordCode")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("id");
 
-                    b.ToTable("Icd10");
+                    b.HasIndex("parentId")
+                        .HasDatabaseName("IX_icd10_parentId");
+
+                    b.ToTable("Icd10", (string)null);
                 });
 
             modelBuilder.Entity("MIS.Models.DB.DbInspection", b =>
@@ -219,7 +228,7 @@ namespace MIS.Migrations
 
                     b.HasIndex("patientid");
 
-                    b.ToTable("Inspections");
+                    b.ToTable("Inspections", (string)null);
                 });
 
             modelBuilder.Entity("MIS.Models.DB.DbInspectionComment", b =>
@@ -247,7 +256,7 @@ namespace MIS.Migrations
 
                     b.HasIndex("authorid");
 
-                    b.ToTable("InspectionComments");
+                    b.ToTable("InspectionComments", (string)null);
                 });
 
             modelBuilder.Entity("MIS.Models.DB.DbInspectionConsultation", b =>
@@ -282,7 +291,7 @@ namespace MIS.Migrations
 
                     b.HasIndex("specialityid");
 
-                    b.ToTable("InspetionConsultations");
+                    b.ToTable("InspetionConsultations", (string)null);
                 });
 
             modelBuilder.Entity("MIS.Models.DB.DbPatient", b =>
@@ -306,7 +315,7 @@ namespace MIS.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("Patients");
+                    b.ToTable("Patients", (string)null);
                 });
 
             modelBuilder.Entity("MIS.Models.DB.DbSpecialty", b =>
@@ -324,7 +333,22 @@ namespace MIS.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("Specialties");
+                    b.ToTable("Specialties", (string)null);
+                });
+
+            modelBuilder.Entity("MIS.Models.DB.DbTokenBlackList", b =>
+                {
+                    b.Property<Guid>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("TokenBlackList", (string)null);
                 });
 
             modelBuilder.Entity("MIS.Models.DB.DbComment", b =>
@@ -361,7 +385,7 @@ namespace MIS.Migrations
                         .IsRequired();
 
                     b.HasOne("MIS.Models.DB.DbPatient", "patient")
-                        .WithMany()
+                        .WithMany("inspections")
                         .HasForeignKey("patientid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -415,6 +439,11 @@ namespace MIS.Migrations
                     b.Navigation("consultations");
 
                     b.Navigation("diagnoses");
+                });
+
+            modelBuilder.Entity("MIS.Models.DB.DbPatient", b =>
+                {
+                    b.Navigation("inspections");
                 });
 #pragma warning restore 612, 618
         }

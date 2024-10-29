@@ -19,7 +19,7 @@ namespace MIS.Controllers
         // получить лист специализаций
         [HttpGet("/specialty")]
         public async Task<ActionResult<SpecialtiesPagedListModel>> getList(
-                [FromQuery] string name,
+                [FromQuery] string name = "",
                 [FromQuery] int page = 1,
                 [FromQuery] int size = 5)
         {
@@ -35,7 +35,7 @@ namespace MIS.Controllers
 
         [HttpGet("/icd10")]
         public async Task<ActionResult<Icd10SearchModel>> getIcd10(
-                [FromQuery] string request,
+                [FromQuery] string request = "",
                 [FromQuery] int page = 1,
                 [FromQuery] int size = 5)
         {
@@ -50,9 +50,9 @@ namespace MIS.Controllers
         }
 
         [HttpGet("/icd10/roots")]
-        public IEnumerable<Icd10RecordModel> getIcdRoot()
+        public async Task<List<Icd10RecordModel>> getIcdRoot()
         {
-            return _dictionaryservice.getIcdList();
+            return await _dictionaryservice.getIcdRoots();
         }
     }
 }

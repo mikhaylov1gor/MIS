@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MIS.Migrations
 {
     /// <inheritdoc />
-    public partial class CreateDataBase : Migration
+    public partial class createDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -37,7 +37,9 @@ namespace MIS.Migrations
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     createTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     code = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    recordCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    parentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -70,6 +72,18 @@ namespace MIS.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Specialties", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TokenBlackList",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    token = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TokenBlackList", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -244,6 +258,11 @@ namespace MIS.Migrations
                 column: "DbInspectionid");
 
             migrationBuilder.CreateIndex(
+                name: "IX_icd10_parentId",
+                table: "Icd10",
+                column: "parentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_InspectionComments_authorid",
                 table: "InspectionComments",
                 column: "authorid");
@@ -288,6 +307,9 @@ namespace MIS.Migrations
 
             migrationBuilder.DropTable(
                 name: "InspetionConsultations");
+
+            migrationBuilder.DropTable(
+                name: "TokenBlackList");
 
             migrationBuilder.DropTable(
                 name: "Consultations");
