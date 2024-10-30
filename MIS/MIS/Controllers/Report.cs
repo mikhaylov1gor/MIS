@@ -19,12 +19,12 @@ namespace MIS.Controllers
 
         [Authorize]
         [HttpGet("{id}/icdrootsreport")]
-        public IcdRootsReportModel getReport(
+        public async Task<IcdRootsReportModel> getReport(
             [FromQuery] DateTime start,
             [FromQuery] DateTime end,
             [FromQuery] List<Guid> icdRoots)
         {
-            return _reportService.getReport(start, end, icdRoots);
+            return await _reportService.getReport(start, end, icdRoots);
         }
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MIS.Models.DB;
 using MIS.Models.DTO;
+using System.Security.Claims;
 
 namespace MIS.Services
 {
@@ -13,8 +14,8 @@ namespace MIS.Services
                 [FromQuery] int page,
                 [FromQuery] int size);
         Task<ConsultationModel> GetById(Guid id);
-        Task<ResponseModel> CreateById(Guid id, CommentCreateModel comment);
-        Task<ResponseModel> EditById(Guid id, InspectionCommentCreateModel comment);
+        Task<Guid> CreateById(Guid id, CommentCreateModel comment, ClaimsPrincipal user);
+        Task<ActionResult> EditById(Guid id, InspectionCommentCreateModel newComment);
     }
     public class ConsultationService : IConsultationService
     {
@@ -90,6 +91,7 @@ namespace MIS.Services
         public async Task<ConsultationModel> GetById(Guid id)
         {
             var DBmodel = await _context.Consultations.FindAsync(id);
+
             if (DBmodel == null)
             {
                 return null;
@@ -111,44 +113,50 @@ namespace MIS.Services
 
         }
 
-        public async Task<ResponseModel> CreateById (Guid id, CommentCreateModel comment)
+        public async Task<Guid> CreateById (Guid id, CommentCreateModel comment, ClaimsPrincipal user)
         {
+            // проверка на аутентификацию
+            var doctorId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (doctorId == null || !Guid.TryParse(doctorId, out var parsedId))
+            {
+                return Guid.Empty;
+            }
+            var doctor = await _context.Doctors.FindAsync(parsedId);
+
             var consultation = await _context.Consultations.FindAsync(id);
             if (consultation == null)
             {
-                return new ResponseModel { status = "404", message = "consultation not found" };
+                return Guid.Empty;
             }
 
             var newComment = new DbComment
             {
                 createTime = DateTime.Now,
-                // необходимо добавить authorId, author
+                authorId = parsedId,
+                author = doctor.name,
                 content = comment.content,
-                parentId = id,
+                // parentId ?
             };
 
-            await _context.Comments.AddAsync(newComment);
-            await _context.SaveChangesAsync();
+            consultation.comments.Add(newComment);
 
-            return new ResponseModel { status = "200", message = "success" };
+            return newComment.id;
         }
 
-        public async Task<ResponseModel> EditById (Guid id, InspectionCommentCreateModel newComment)
+        public async Task<ActionResult> EditById (Guid id, InspectionCommentCreateModel newComment)
         {
             var comment = await _context.Comments.FindAsync(id);
             if (comment == null)
             {
-                return new ResponseModel { status = "404", message = "comment not found" };
+                return null;
             }
             else
             {
                 comment.modifiedDate = DateTime.Now;
                 comment.content = newComment.content;
                 await _context.SaveChangesAsync();
-                return new ResponseModel { status = "200", message = "succcess" };
-            }
-            
+                return null;
+            }  
         }
-
     }
 }

@@ -21,7 +21,7 @@ namespace MIS.Services
         {
             var DbToken = new DbTokenBlackList
             {
-                token = token
+                token = token,
             };
 
             await _context.TokenBlackList.AddAsync(DbToken);

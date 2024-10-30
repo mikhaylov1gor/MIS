@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using MIS.Models.DB;
@@ -12,7 +13,7 @@ namespace MIS.Services
     {
         Task<InspectionModel> getInspection(Guid id);
 
-        Task<ResponseModel> editInspection(Guid id, InspectionEditModel inspectionEdit);
+        Task<ActionResult> editInspection(Guid id, InspectionEditModel inspectionEdit);
 
         Task<List<InspectionPreviewModel>> getChain(Guid id);
 
@@ -115,13 +116,13 @@ namespace MIS.Services
 
         }
 
-        public async Task<ResponseModel> editInspection(Guid id, InspectionEditModel inspectionEdit)
+        public async Task<ActionResult> editInspection(Guid id, InspectionEditModel inspectionEdit)
         {
             var inspection = await _context.Inspections.FindAsync(id);
 
             if (inspection == null)
             {
-                return new ResponseModel { status = "404", message = "Not Found" };
+                return null;
             }
             else
             {
@@ -150,7 +151,7 @@ namespace MIS.Services
                 }
 
                 await _context.SaveChangesAsync();
-                return new ResponseModel { status = "200", message = "Success" };
+                return null;
             }
         }
 
@@ -166,7 +167,8 @@ namespace MIS.Services
             var inspections = new List<InspectionPreviewModel>();
             while (rootInspection.previousInspectionId != null || rootInspection.id != rootInspection.baseInspectionId)
             {
-                var firstDiagnosis = rootInspection.diagnoses[0];
+                var mainDiagnosis = rootInspection.diagnoses.FirstOrDefault(t => t.type == DiagnosisType.Main);
+
                 inspections.Add(new InspectionPreviewModel
                 {
                     id = rootInspection.id,
@@ -178,12 +180,12 @@ namespace MIS.Services
                     patientId = rootInspection.patient.id,
                     diagnosis = new DiagnosisModel
                     {
-                        id = firstDiagnosis.id,
-                        createTime = firstDiagnosis.createTime,
-                        code = firstDiagnosis.code,
-                        name = firstDiagnosis.name,
-                        description = firstDiagnosis.description,
-                        type = firstDiagnosis.type,
+                        id = mainDiagnosis.id,
+                        createTime = mainDiagnosis.createTime,
+                        code = mainDiagnosis.code,
+                        name = mainDiagnosis.name,
+                        description = mainDiagnosis.description,
+                        type = mainDiagnosis.type,
                     },
                     hasChain = (rootInspection.previousInspectionId  != null),
                     hasNested = (rootInspection.nextVisitDate != null),

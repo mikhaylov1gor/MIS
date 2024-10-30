@@ -4,6 +4,6 @@
     {
         public DateTime start { get; set; }
         public DateTime end { get; set; }
-        public List<string>? icdRoots { get; set; }
+        public List<Guid>? icdRoots { get; set; }
     }
 }

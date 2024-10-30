@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "4a29I55Z2XLdTi8KltiZmmN3B1ojD1daLdpl9EM8aoQTiBcyIzHsFc6F6M4Dz5gctHXiZbAOq65HHwNjsk3vVg==",
+  "dgSpecHash": "L808bFfuQSZVsMOtWWBB6QAasyGuP5P+tjluKcxKPKB5bZZRAZvUAYD6GLxfVgCIP/PEV69ZzpNGMvJQ/QBm6Q==",
   "success": true,
   "projectFilePath": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\MIS.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\mikha\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\mikha\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
     "C:\\Users\\mikha\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
+    "C:\\Users\\mikha\\.nuget\\packages\\fluentvalidation\\11.10.0\\fluentvalidation.11.10.0.nupkg.sha512",
     "C:\\Users\\mikha\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\mikha\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\8.0.10\\microsoft.aspnetcore.authentication.jwtbearer.8.0.10.nupkg.sha512",
     "C:\\Users\\mikha\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\6.0.0\\microsoft.bcl.asyncinterfaces.6.0.0.nupkg.sha512",

@@ -68,6 +68,13 @@ namespace MIS.Services
             [FromQuery] int size,
             ClaimsPrincipal user)
         {
+            // проверка на аутентификацию
+            var doctorId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (doctorId == null || !Guid.TryParse(doctorId, out var parsedId))
+            {
+                return null;
+            }
+
             // выборка по имени
             var query = _context.Patients
                 .Where(i => EF.Functions.Like(i.name, $"%{name}%"));
@@ -81,11 +88,9 @@ namespace MIS.Services
 
             // выборка по доктору
             if (onlyMine)
-            {
-                var doctorId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
+            { 
                 query = query
-                    .Where(p => p.inspections.Any(d => d.doctor.id.ToString() == doctorId));
+                    .Where(p => p.inspections.Any(d => d.doctor.id == parsedId));
             }
 
             // выборка по предстоящему визиту
@@ -195,14 +200,13 @@ namespace MIS.Services
                 patient = rootPatient,
                 doctor = doctor
             };
-
+       
             // рекурсивное нахождение основного осмотра
-            var baseInspectionId = inspection.previousInspectionId; 
+            var baseInspectionId = inspection.previousInspectionId;
+            previousInspection = await _context.Inspections.FindAsync(inspection.previousInspectionId);
 
             while (inspection.previousInspectionId != null)
             {
-                var previousInspection = await _context.Inspections.FindAsync(inspection.previousInspectionId);
-
                 if (previousInspection == null) break;
 
                 baseInspectionId = previousInspection.previousInspectionId;
@@ -239,14 +243,19 @@ namespace MIS.Services
 
             // трансформация диагнозов
             inspection.diagnoses = new List<DbDiagnosis>();
+            bool isMainExist = false; // проверка на один мейн диагноз
 
-            // добавить проверку на один мейн диагноз/одну смерть и т.д.
             foreach (var d in model.diagnosis)
             {
                 var icd10Record = await _context.Icd10.FindAsync(d.icdDiagnosisId);
                 if (icd10Record == null)
                 {
                     return Guid.Empty;
+                }
+                if (d.type == DiagnosisType.Main)
+                {
+                    if (isMainExist) return Guid.Empty;
+                    else isMainExist = true;
                 }
                 {
                     inspection.diagnoses.Add(new DbDiagnosis

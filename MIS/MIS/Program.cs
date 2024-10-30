@@ -11,6 +11,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text.Json.Serialization;
+using MIS.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -64,6 +65,8 @@ builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IJwtProvider, JwtProvider>();
 builder.Services.AddScoped<ISeedDataService, SeedDataService>();
 builder.Services.AddScoped<ITokenBlackListService, TokenBlackListService>();
+builder.Services.AddHostedService<TokenCleanupService>();
+
 
 //jwt
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(nameof(JwtOptions)));
@@ -119,6 +122,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+//middleware
+app.UseCustomExceptionHandler();
 
 app.UseHttpsRedirection();
 

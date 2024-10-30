@@ -54,9 +54,9 @@ namespace MIS.Controllers
 
         [Authorize]
         [HttpPost("{id}/comment")]
-        public async Task<ActionResult<ResponseModel>> postComment(Guid id, CommentCreateModel comment)
+        public async Task<ActionResult<Guid>> postComment(Guid id, CommentCreateModel comment)
         {
-            var response = await _consultationService.CreateById(id, comment);
+            var response = await _consultationService.CreateById(id, comment, User);
 
             return Ok(response);
         }
