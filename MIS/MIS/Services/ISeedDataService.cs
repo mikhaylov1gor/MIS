@@ -32,7 +32,7 @@ namespace MIS.Services
                 {
                     foreach (var specialty in specialties) 
                     {
-                        specialty.createTime = DateTime.Now;
+                        specialty.createTime = DateTime.UtcNow;
                     }
                     await _context.Specialties.AddRangeAsync(specialties);
                     await _context.SaveChangesAsync();
@@ -56,7 +56,7 @@ namespace MIS.Services
                         {
                             var dbIcd10 = new DbIcd10
                             {
-                                createTime = DateTime.Now,
+                                createTime = DateTime.UtcNow,
                                 code = addRec(record.MKB_CODE),
                                 name = record.MKB_NAME,
                                 recordCode = record.REC_CODE,
@@ -81,7 +81,7 @@ namespace MIS.Services
 
                             var dbIcd10 = new DbIcd10
                             {
-                                createTime = DateTime.Now,
+                                createTime = DateTime.UtcNow,
                                 code = record.MKB_CODE,
                                 name = record.MKB_NAME,
                                 recordCode = record.REC_CODE,

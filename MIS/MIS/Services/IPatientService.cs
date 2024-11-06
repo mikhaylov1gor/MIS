@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MIS.Middleware;
 using MIS.Models.DB;
 using MIS.Models.DTO;
+using System.Diagnostics;
 using System.Security.Claims;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
@@ -25,12 +27,12 @@ namespace MIS.Services
 
         Task<Guid> createInspection(Guid id, InspectionCreateModel model, ClaimsPrincipal user);
 
-        InspectionPagedListModel getInspections(
-            Guid id,
-            [FromQuery] bool grouped,
-            [FromQuery] List<Guid> icdRoots,
-            [FromQuery] int page,
-            [FromQuery] int size);
+        Task<InspectionPagedListModel> getInspections(
+                    Guid PatientId,
+                    [FromQuery] bool grouped,
+                    [FromQuery] List<Guid> icdRoots,
+                    [FromQuery] int page,
+                    [FromQuery] int size);
 
         Task<PatientModel> getPatient(Guid id);
 
@@ -49,7 +51,11 @@ namespace MIS.Services
         // Создать пациента
         public async Task<Guid> createPatient(PatientCreateModel patient)
         {
-            DbPatient newPatient = new DbPatient { createTime = DateTime.Now, birthday = patient.birthday, name = patient.name, gender = patient.gender };
+            if (patient.birthday > DateTime.UtcNow)
+            {
+                throw new ValidationAccessException(); //ex
+            }
+            DbPatient newPatient = new DbPatient { createTime = DateTime.UtcNow, birthday = patient.birthday, name = patient.name, gender = patient.gender };
 
             await _context.Patients.AddAsync(newPatient);
             await _context.SaveChangesAsync();
@@ -68,11 +74,16 @@ namespace MIS.Services
             [FromQuery] int size,
             ClaimsPrincipal user)
         {
+            // проверка на валидность пагинации
+            if (page < 1 || size < 1)
+            {
+                throw new ValidationAccessException();
+            }
             // проверка на аутентификацию
             var doctorId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (doctorId == null || !Guid.TryParse(doctorId, out var parsedId))
             {
-                return null;
+                throw new UnauthorizedAccessException();
             }
 
             // выборка по имени
@@ -119,13 +130,13 @@ namespace MIS.Services
                     query = query.OrderByDescending(p => p.createTime);
                     break;
 
-/*                case PatientSorting.InspectionAcs:
-                    query = query.OrderBy(p => p.createTime);
+               case PatientSorting.InspectionAcs:
+                    query = query.OrderBy(p => p.inspections.Min(i => i.createTime));
                     break;
 
                 case PatientSorting.InspectionDesc:
-                    query = query.OrderByDescending(p => p.createTime);
-                    break;*/
+                    query = query.OrderByDescending(p => p.inspections.Min(i => i.createTime));
+                    break;
 
                 default:
                     query = query.OrderBy(p => p.name);
@@ -163,7 +174,7 @@ namespace MIS.Services
             var doctorId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (doctorId == null || !Guid.TryParse(doctorId, out var parsedId))
             {
-                return Guid.Empty;
+                throw new UnauthorizedAccessException();
             }
 
             var doctor = await _context.Doctors
@@ -174,21 +185,28 @@ namespace MIS.Services
 
             if (rootPatient == null)
             {
-                return Guid.Empty;
+                throw new KeyNotFoundException(); //ex
             }
 
             // проверка предыдущего осмотра (проверка на смерть)
             var previousInspection = await _context.Inspections.FindAsync(model.previousInspectionId);
 
-            if (previousInspection == null || previousInspection.conclusion == Conclusion.Death)
+            if (previousInspection != null && previousInspection.conclusion == Conclusion.Death)
             {
-                return Guid.Empty;
+                throw new ValidationAccessException(); //ex
             }
 
+            // доп проверки
+            if (model.conclusion == Conclusion.Death && model.nextVisitDate == null ||
+                model.nextVisitDate < model.date)
+            {
+                throw new ValidationAccessException(); //ex
+            }
+            if (model.deathDate != null) { model.conclusion = Conclusion.Death; }
             // создание модели осмотра
             var inspection = new DbInspection
             {
-                createTime = DateTime.Now,
+                createTime = DateTime.UtcNow,
                 date = model.date,
                 anamnesis = model.anamnesis,
                 complaints = model.complaints,
@@ -201,18 +219,20 @@ namespace MIS.Services
                 doctor = doctor
             };
        
-            // рекурсивное нахождение основного осмотра
-            var baseInspectionId = inspection.previousInspectionId;
-            previousInspection = await _context.Inspections.FindAsync(inspection.previousInspectionId);
-
-            while (inspection.previousInspectionId != null)
+            if (inspection.previousInspectionId == null)
             {
-                if (previousInspection == null) break;
-
-                baseInspectionId = previousInspection.previousInspectionId;
+                inspection.baseInspectionId = inspection.id;
+            }
+            else
+            {
+                previousInspection = await _context.Inspections.FindAsync(inspection.previousInspectionId);
+                if (previousInspection == null)
+                {
+                    throw new KeyNotFoundException(); //ex
+                }
+                inspection.baseInspectionId = previousInspection.baseInspectionId;
             }
 
-            inspection.baseInspectionId = baseInspectionId;
 
             // трансформация консультаций
             inspection.consultations = new List<DbInspectionConsultation>();
@@ -222,20 +242,20 @@ namespace MIS.Services
                 var DBSpecialty = await _context.Specialties.FindAsync(consultation.specialityId);
                 if (DBSpecialty == null) 
                 {
-                    return Guid.Empty;
+                    throw new KeyNotFoundException(); //ex
                 }
                 inspection.consultations.Add(new DbInspectionConsultation
                 {
-                    createTime = DateTime.Now,
+                    createTime = DateTime.UtcNow,
                     inspectionId = inspection.id,
                     speciality = DBSpecialty,
                     rootComment = new DbInspectionComment
                     {
-                        createTime = DateTime.Now,
+                        createTime = DateTime.UtcNow,
                         parentId = null,
                         content = consultation.comment.content,
                         author = doctor,
-                        modifyTime = DateTime.Now,
+                        modifyTime = DateTime.UtcNow,
                     },
                     commentsNumber = 1
                 });
@@ -250,17 +270,18 @@ namespace MIS.Services
                 var icd10Record = await _context.Icd10.FindAsync(d.icdDiagnosisId);
                 if (icd10Record == null)
                 {
-                    return Guid.Empty;
+                    throw new KeyNotFoundException(); //ex
                 }
                 if (d.type == DiagnosisType.Main)
                 {
-                    if (isMainExist) return Guid.Empty;
+                    if (isMainExist) throw new ValidationAccessException();
                     else isMainExist = true;
+                    if (icd10Record.parentId != null) throw new ValidationAccessException(); // если основной диагноз не является корневым элементов мкб
                 }
                 {
                     inspection.diagnoses.Add(new DbDiagnosis
                     {
-                        createTime = DateTime.Now,
+                        createTime = DateTime.UtcNow,
                         code = icd10Record.code,
                         name = icd10Record.name,
                         description = d.description,
@@ -276,7 +297,7 @@ namespace MIS.Services
 
         }
         // !!!!!!!!!!!!
-        public InspectionPagedListModel getInspections(
+        public async Task<InspectionPagedListModel> getInspections(
             Guid PatientId,
             [FromQuery] bool grouped,
             [FromQuery] List<Guid> icdRoots,
@@ -292,9 +313,8 @@ namespace MIS.Services
 
             if (DBpatient == null)
             {
-                return null;
+                throw new KeyNotFoundException(); //ex
             }
-
             else
             {
                 var patient = new PatientModel
@@ -315,7 +335,7 @@ namespace MIS.Services
 
             if (patient == null)
             {
-                return null;
+                throw new KeyNotFoundException();
             }
 
             var query = patient.inspections

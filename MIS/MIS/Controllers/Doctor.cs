@@ -19,64 +19,48 @@ namespace MIS.Controllers
         {
             _doctorService = _service;
         }
-        
+
         // регистрация доктора\
+        [AllowAnonymous]
         [HttpPost("/register")]
-        public async Task<IActionResult> register(DoctorRegisterModel doctor)
+        public async Task<ActionResult> register(DoctorRegisterModel doctor)
         {
-            var result = await _doctorService.register(doctor);
-
-            if (result is ResponseModel responseModel)
-            {
-                return StatusCode(int.Parse(responseModel.status), responseModel);
-            }
-
-            return Ok(result);
+            var response = await _doctorService.register(doctor);
+            return Ok(response);
         }
 
         // логин
+        [AllowAnonymous]
         [HttpPost("/login")]
         public async Task<ActionResult<TokenResponseModel>> login(LoginCredentialsModel loginCredentials)
         {
-            var token = await _doctorService.login(loginCredentials);
-
-            if (token == null) 
-            {
-                return StatusCode(401, new ResponseModel { status = "401", message = "Password or email is incorrect" });
-            }
-
-            return Ok(token);
+            var response = await _doctorService.login(loginCredentials);
+            return Ok(response);
         }
 
         [Authorize]
         [HttpPost("/logout")]
-        public async Task<ResponseModel> logout()
+        public async Task<ActionResult> logout()
         {
             var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            return await _doctorService.logout(token);
+            var response = await _doctorService.logout(token,User);
+            return Ok(response);
         }
 
         [Authorize]
         [HttpGet("/profile")]
         public async Task<ActionResult<DoctorModel>> getProfile()
         {
-            var profile = await _doctorService.getProfile(User);
-
-            if (profile == null)
-            {
-                return NotFound(new ResponseModel { status = "404", message = "Doctor profile not found" });
-            }
-            else
-            {
-                return Ok(profile);
-            }
+            var response = await _doctorService.getProfile(User);
+            return Ok(response);
         }
 
         [Authorize]
         [HttpPut("/profile")]
-        public async Task<ResponseModel> editProfile(DoctorEditModel doctorEdit)
+        public async Task<ActionResult> editProfile(DoctorEditModel doctorEdit)
         {
-            return await _doctorService.editProfile(doctorEdit, User);
+            var response = await _doctorService.editProfile(doctorEdit, User);
+            return Ok(response);
         }
 
     }

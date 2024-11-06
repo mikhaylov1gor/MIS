@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using MIS.Middleware;
 using MIS.Models.DB;
 using MIS.Models.DTO;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Transactions;
 
@@ -13,7 +15,7 @@ namespace MIS.Services
     {
         Task<InspectionModel> getInspection(Guid id);
 
-        Task<ActionResult> editInspection(Guid id, InspectionEditModel inspectionEdit);
+        Task<ActionResult> editInspection(Guid id, InspectionEditModel inspectionEdit, ClaimsPrincipal user);
 
         Task<List<InspectionPreviewModel>> getChain(Guid id);
 
@@ -29,10 +31,9 @@ namespace MIS.Services
         public async Task<InspectionModel> getInspection(Guid id)
         {
             var model = await _context.Inspections.FindAsync(id);
-
             if (model == null)
             {
-                return null;
+                throw new KeyNotFoundException(); //ex
             }
 
             var transformedConsultations = model.consultations?.Select(c => new InspectionConsultationModel
@@ -113,16 +114,27 @@ namespace MIS.Services
             };
 
             return inspection;
-
         }
 
-        public async Task<ActionResult> editInspection(Guid id, InspectionEditModel inspectionEdit)
+        public async Task<ActionResult> editInspection(Guid id, InspectionEditModel inspectionEdit, ClaimsPrincipal user)
         {
-            var inspection = await _context.Inspections.FindAsync(id);
+            // проверка на аутентификацию
+            var doctorId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (doctorId == null || !Guid.TryParse(doctorId, out var parsedId))
+            {
+                throw new UnauthorizedAccessException(); //ex
+            }
 
+            // проверка на наличие
+            var inspection = await _context.Inspections.FindAsync(id);
             if (inspection == null)
             {
-                return null;
+                throw new KeyNotFoundException(); // ex
+            }
+            // проверка на права доступа
+            if (inspection.doctor.id != parsedId)
+            {
+                throw new ForbiddenAccessException(); //ex
             }
             else
             {
@@ -133,7 +145,20 @@ namespace MIS.Services
                 inspection.nextVisitDate = inspectionEdit.nextVisitDate;
                 inspection.deathDate = inspectionEdit.deathDate;
 
+                if (inspection.deathDate != null) { inspection.conclusion = Conclusion.Death; }
+
+                // доп проверки
+                if (inspectionEdit.conclusion == Conclusion.Death && inspectionEdit.nextVisitDate != null ||
+                    inspection.nextVisitDate < inspection.date)
+                {
+                    throw new ValidationAccessException(); //ex
+                }
+
                 inspection.diagnoses = new List<DbDiagnosis>();
+                if (inspectionEdit.diagnosis.Count < 1)
+                {
+                    throw new ValidationAccessException(); //ex
+                }
                 foreach (var d in inspectionEdit.diagnosis)
                 {
                     var icd10Record = await _context.Icd10.FindAsync(d.icdDiagnosisId);
@@ -141,12 +166,16 @@ namespace MIS.Services
                     {
                         inspection.diagnoses.Add(new DbDiagnosis
                         {
-                            createTime = DateTime.Now,
+                            createTime = DateTime.UtcNow,
                             code = icd10Record.code,
                             name = icd10Record.name,
                             description = d.description,
                             type = d.type,
                         });
+                    }
+                    else
+                    {
+                        throw new ValidationAccessException(); //ex
                     }
                 }
 
@@ -161,7 +190,7 @@ namespace MIS.Services
 
             if (rootInspection == null)
             {
-                return null;
+                throw new KeyNotFoundException(); // ex
             }
 
             var inspections = new List<InspectionPreviewModel>();
@@ -194,7 +223,7 @@ namespace MIS.Services
 
             if (inspections == null)
             {
-                return null;
+                throw new ValidationAccessException();
             }
             else
             {

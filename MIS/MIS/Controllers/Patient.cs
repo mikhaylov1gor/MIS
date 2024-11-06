@@ -23,7 +23,8 @@ namespace MIS.Controllers
         [HttpPost]
         public async Task<ActionResult<Guid>> createPatient(PatientCreateModel patient)
         {
-            return await _patientService.createPatient(patient);
+            var response = await _patientService.createPatient(patient);
+            return Ok(response);
             
         }
 
@@ -39,58 +40,45 @@ namespace MIS.Controllers
             [FromQuery] int page = 1,
             [FromQuery] int size = 5)
         {
-            var patients = await _patientService.getPatients(name, conclusions, sorting, scheduledVisits, onlyMine, page, size, User);
-
-            if (patients == null)
-            {
-                return StatusCode(404, new ResponseModel { status = "404", message = "Not Found" });
-            }
-            else
-            {
-                return StatusCode(200, patients);
-            }
+            var response = await _patientService.getPatients(name, conclusions, sorting, scheduledVisits, onlyMine, page, size, User);
+            return Ok(response);
         }
 
         [Authorize]
         [HttpPost("{id}/inspections")]
-        public async Task<Guid> createInspection(Guid id, InspectionCreateModel model)
+        public async Task<ActionResult<Guid>> createInspection(Guid id, InspectionCreateModel model)
         {
-            return await _patientService.createInspection(id, model, User);
+            var response = await _patientService.createInspection(id, model, User);
+            return Ok(response);
         }
         // !!!!!!!!!!!!
         [Authorize]
         [HttpGet("{id}/inspections")]
-        public InspectionPagedListModel getInspections(
+        public async Task<ActionResult<InspectionPagedListModel>> getInspections(
             Guid id,
             [FromQuery] bool grouped,
             [FromQuery] List<Guid> icdRoots,
             [FromQuery] int page,
             [FromQuery] int size)
         {
-            return _patientService.getInspections(id, grouped, icdRoots, page, size);
+            var response = await _patientService.getInspections(id, grouped, icdRoots, page, size);
+            return Ok(response);
         }
 
         [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<PatientModel>> getPatient(Guid id)
         {
-            var patient = await _patientService.getPatient(id);
-
-            if (patient == null)
-            {
-                return StatusCode(404, new ResponseModel { status = "404", message = "Not Found" });
-            }
-            else
-            {
-                return patient;
-            }
+            var response = await _patientService.getPatient(id);
+            return Ok(response);
         }
 
         [Authorize]
         [HttpGet("{id}/inspections/search")]
-        public async Task<List<InspectionShortModel>> getShortInspection(Guid id, [FromQuery] string request)
+        public async Task<ActionResult<List<InspectionShortModel>>> getShortInspection(Guid id, [FromQuery] string request)
         {
-            return await _patientService.getShortInspection(id, request);
+            var response = await _patientService.getShortInspection(id, request);
+            return Ok(response);
         }
     }
 }

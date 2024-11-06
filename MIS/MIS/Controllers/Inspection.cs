@@ -23,41 +23,25 @@ namespace MIS.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<InspectionModel>> getInspection(Guid id)
         {
-            var inspection = await _inspectionService.getInspection(id);
+            var response = await _inspectionService.getInspection(id);
+            return Ok(response);
 
-            if (inspection == null)
-            {
-                return StatusCode(404, new ResponseModel { status = "404", message = "Not Found" });
-            }
-            else
-            {
-                return Ok(inspection);
-            }
         }
 
         [Authorize]
         [HttpPut("{id}")]
-        public async Task<ActionResult<ResponseModel>>  editInspection(Guid id, InspectionEditModel inspectionEdit)
+        public async Task<ActionResult>  editInspection(Guid id, InspectionEditModel inspectionEdit)
         {
-            var response = await _inspectionService.editInspection(id, inspectionEdit);
-
-            return response;
+            var response = await _inspectionService.editInspection(id, inspectionEdit, User);
+            return Ok(response);
         }
 
         [Authorize]
         [HttpGet("{id}/chain")]
         public async Task<ActionResult<InspectionPreviewModel>> getChainInspections(Guid id)
         {
-            var inspections = await _inspectionService.getChain(id);
-
-            if (inspections == null)
-            {
-                return StatusCode(404, new ResponseModel { status = "404", message = "Not Found" });
-            }
-            else
-            {
-                return Ok(inspections);
-            }
+            var response = await _inspectionService.getChain(id);
+            return Ok(response);
         }
     }
 }

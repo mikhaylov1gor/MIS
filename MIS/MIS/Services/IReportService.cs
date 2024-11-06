@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MIS.Middleware;
 using MIS.Models.DB;
 using MIS.Models.DTO;
 using System.Linq;
@@ -28,6 +29,10 @@ namespace MIS.Services
             [FromQuery] DateTime end,
             [FromQuery] List<Guid> icdRoots)
         {
+            if (start > end)
+            {
+                throw new ValidationAccessException();
+            }
             var summaryByRoot = new Dictionary<string, int>();
             if (icdRoots == null)
             {
@@ -63,7 +68,6 @@ namespace MIS.Services
                 var inspections = patient.inspections;
                 foreach (var inspection in inspections)
                 {
-                   
                     if (inspection.date >= start && inspection.date <= end)
                     {
                         var diagnoses = inspection.diagnoses;

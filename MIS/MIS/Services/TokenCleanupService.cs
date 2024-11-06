@@ -28,7 +28,7 @@ public class TokenCleanupService : IHostedService, IDisposable
         var dbContext = scope.ServiceProvider.GetRequiredService<MisDbContext>(); 
 
         var oldTokens = dbContext.TokenBlackList
-            .Where(t => t.expirationTime < DateTime.Now.AddHours(-12));
+            .Where(t => t.expirationTime < DateTime.UtcNow.AddHours(-12));
 
         dbContext.TokenBlackList.RemoveRange(oldTokens);
         await dbContext.SaveChangesAsync();

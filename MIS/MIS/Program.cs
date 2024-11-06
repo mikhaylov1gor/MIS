@@ -84,25 +84,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtOptions:SecretKey"]))
         };
-
-        options.Events = new JwtBearerEvents
-        {
-            OnTokenValidated = async context =>
-            {
-                var tokenBlackListService = context.HttpContext.RequestServices.GetRequiredService<ITokenBlackListService>();
-                var token = context.SecurityToken as JwtSecurityToken;
-
-                if (token != null)
-                {
-                    var isRevoked = await tokenBlackListService.iSTokenRevoked(token.RawData);
-
-                    if (isRevoked)
-                    {
-                        context.Fail("Token is revoked");
-                    }
-                }
-            }
-        };
     });
 
 var app = builder.Build();
@@ -122,11 +103,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-//middleware
-app.UseCustomExceptionHandler();
-
 app.UseHttpsRedirection();
+
+// middleware
+app.UseMiddlewareHandlerException();
 
 app.UseAuthentication();
 

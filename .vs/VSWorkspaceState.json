@@ -4,10 +4,11 @@
     "\\MIS",
     "\\MIS\\MIS",
     "\\MIS\\MIS\\Controllers",
+    "\\MIS\\MIS\\Middleware",
     "\\MIS\\MIS\\Models",
     "\\MIS\\MIS\\Models\\DB",
     "\\MIS\\MIS\\Services"
   ],
-  "SelectedNode": "\\MIS\\MIS.sln",
+  "SelectedNode": "\\MIS\\MIS\\Controllers\\Consultation.cs",
   "PreviewInSolutionExplorer": false
 }

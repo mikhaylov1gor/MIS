@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
+using MIS.Middleware;
 using MIS.Models.DB;
 using MIS.Models.DTO;
 
@@ -34,6 +35,11 @@ namespace MIS.Services
                 [FromQuery] int page,
                 [FromQuery] int size)
         {
+            if (page < 0 || size < 0)
+            {
+                throw new ValidationAccessException(); // ex
+            }
+
             var totalItems = await _context.Specialties
                 .Where(s => EF.Functions.Like(s.name, $"%{name}%"))
                 .CountAsync();
@@ -65,6 +71,11 @@ namespace MIS.Services
                 [FromQuery] int page,
                 [FromQuery] int size)
         {
+            if (page < 0 || size < 0)
+            {
+                throw new ValidationAccessException();//ex
+            }
+
             var query = _context.Icd10
                 .Where(i => EF.Functions.Like(i.code, $"%{request}%") || EF.Functions.Like(i.name, $"%{request}%"));
 

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "L808bFfuQSZVsMOtWWBB6QAasyGuP5P+tjluKcxKPKB5bZZRAZvUAYD6GLxfVgCIP/PEV69ZzpNGMvJQ/QBm6Q==",
+  "dgSpecHash": "4Q72zA0RR55VqpGC6IaK/aFrTmbKz3kcJVszlMABEFfv64IS9RA2/qk0pgWUVo0mP+HjfTSUu7475WBd2ur8lw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\mikha\\source\\repos\\webNET-2024_aspnet_1\\MIS\\MIS\\MIS.csproj",
+  "projectFilePath": "C:\\Users\\mikha\\Source\\Repos\\webNET-2024_aspnet_1\\MIS\\MIS\\MIS.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\mikha\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\mikha\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",

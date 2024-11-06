@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using MIS.Middleware;
 using MIS.Models.DTO;
 using MIS.Services;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.Design;
 
 namespace MIS.Controllers
@@ -27,14 +29,7 @@ namespace MIS.Controllers
                 [FromQuery] int page = 1,
                 [FromQuery] int size = 5)
         {
-
-            if (page < 1 || size < 1)
-            {
-                return BadRequest("Page and Size parameters must be greater than 0");
-            }
-
-            var inspectionPagedList = await _consultationService.GetList(grouped, icdRoots, page, size);
-
+            var inspectionPagedList = await _consultationService.GetList(grouped, icdRoots, page, size, User);
             return Ok(inspectionPagedList);
         }
 
@@ -42,14 +37,8 @@ namespace MIS.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ConsultationModel>> getConsultationById(Guid id)
         {
-            var inspection = await _consultationService.GetById(id);
-            
-            if (inspection == null)
-            {
-                return StatusCode(404, new ResponseModel { status = "404", message = "not found" });
-            }
-
-            return Ok(inspection);
+            var response = await _consultationService.GetById(id);
+            return Ok(response);
         }
 
         [Authorize]
@@ -57,7 +46,6 @@ namespace MIS.Controllers
         public async Task<ActionResult<Guid>> postComment(Guid id, CommentCreateModel comment)
         {
             var response = await _consultationService.CreateById(id, comment, User);
-
             return Ok(response);
         }
 
@@ -65,10 +53,8 @@ namespace MIS.Controllers
         [HttpPut("/comment/{id}")]
         public async Task<ActionResult<ResponseModel>> editComment(Guid id, InspectionCommentCreateModel comment)
         {
-            var response = await _consultationService.EditById(id, comment);
-
+            var response = await _consultationService.EditById(id, comment, User);
             return Ok(response);
         }
-
     }
 }

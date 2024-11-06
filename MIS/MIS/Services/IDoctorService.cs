@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using MIS.Infrastucture;
+using MIS.Middleware;
 using MIS.Models.DB;
 using MIS.Models.DTO;
 using System.ComponentModel.DataAnnotations;
@@ -12,15 +14,15 @@ namespace MIS.Services
 {
     public interface IDoctorService
     {
-        Task<object> register(DoctorRegisterModel doctor);
+        Task<TokenResponseModel> register(DoctorRegisterModel doctor);
 
         Task<TokenResponseModel> login(LoginCredentialsModel loginCredentials);
 
-        Task<ResponseModel> logout(string token);
+        Task<ActionResult> logout(string token, ClaimsPrincipal user);
 
         Task<DoctorModel> getProfile(ClaimsPrincipal doctor);
 
-        Task<ResponseModel> editProfile(DoctorEditModel doctorEdit, ClaimsPrincipal user);
+        Task<ActionResult> editProfile(DoctorEditModel doctorEdit, ClaimsPrincipal user);
     }
     public class DoctorService : IDoctorService
     {
@@ -42,7 +44,7 @@ namespace MIS.Services
         }
 
         // регистрация доктора
-        public async Task<object> register(DoctorRegisterModel doctor)
+        public async Task<TokenResponseModel> register(DoctorRegisterModel doctor)
         {
             var hashedPassword = _passwordHasher.Generate(doctor.password);
 
@@ -53,7 +55,7 @@ namespace MIS.Services
 
             if (exists)
             {
-                return new ResponseModel { status = "400", message = "this email or phone number already registered" };
+                throw new ValidationAccessException("Email Or Phone Already Registered"); //ex
             }
 
             // проверка существует ли такая специализация
@@ -63,13 +65,13 @@ namespace MIS.Services
 
             if (!exists)
             {
-                return new ResponseModel { status = "400", message = "wrong specialty" };
+                throw new ValidationAccessException("Wrong Specialty"); // ex
             }
 
             DbDoctor newDoctor = new DbDoctor
             {
                 birthday = doctor.birthday,
-                createTime = DateTime.Now,
+                createTime = DateTime.UtcNow,
 
                 email = doctor.email,
                 gender = doctor.gender,
@@ -93,52 +95,59 @@ namespace MIS.Services
 
             if (doctor == null)
             {
-                return null;
+                throw new ValidationAccessException("Wrong Email Or Password"); // ex
             }
 
             var result = _passwordHasher.Verify(loginCredentials.password, doctor.passwordHash);
 
             if (!result)
             {
-                return null;
+                throw new ValidationAccessException("Wrong Email Or Password"); // ex
             }
             else
             {
                 return _jwtProvider.GenerateToken(doctor);
             }
-
-            await _context.SaveChangesAsync();
         }
 
-        public async Task<ResponseModel> logout(string token)
-        {
-            if (!string.IsNullOrEmpty(token))
-            { 
-                await _tokenBlackListService.AddTokenToBlackList(token);
-                return new ResponseModel { status = "200", message = "Success" };
-            }
-            else
-            {
-                return new ResponseModel { status = "404", message = "Logout Failed" };
-            }
-        }
-
-        public async Task<DoctorModel> getProfile(ClaimsPrincipal user)
+        public async Task<ActionResult> logout(string token, ClaimsPrincipal user)
         {
             var doctorId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (doctorId == null || !Guid.TryParse(doctorId, out var parsedId))
             {
+                throw new UnauthorizedAccessException(); // ex
+            }
+
+            if (!string.IsNullOrEmpty(token))
+            { 
+                await _tokenBlackListService.AddTokenToBlackList(token);
                 return null;
+            }
+            else
+            {
+                throw new UnauthorizedAccessException(); // ex
+            }
+        }
+
+        public async Task<DoctorModel> getProfile(ClaimsPrincipal user)
+        {
+            // проверка на аутентификацию
+            var doctorId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (doctorId == null || !Guid.TryParse(doctorId, out var parsedId))
+            {
+                throw new UnauthorizedAccessException(); // ex
             }
 
             var doctor = await _context.Doctors
                 .AsNoTracking()
                 .FirstOrDefaultAsync(d => d.id == parsedId);
 
+            // проверка на наличие профиля
             if (doctor == null)
             {
-                return null;
+                throw new KeyNotFoundException();  //ex
             }
 
             return new DoctorModel
@@ -153,22 +162,23 @@ namespace MIS.Services
             };
         }
 
-        public async Task<ResponseModel> editProfile(DoctorEditModel doctorEdit, ClaimsPrincipal user)
+        public async Task<ActionResult> editProfile(DoctorEditModel doctorEdit, ClaimsPrincipal user)
         {
+            // проверка на аутентификацию
             var doctorId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (doctorId == null || !Guid.TryParse(doctorId, out var parsedId))
             {
-                return new ResponseModel { status = "401", message = "Unauthorized"};
+                throw new UnauthorizedAccessException(); // ex
             }
 
             var doctor = await _context.Doctors
-                .AsNoTracking()
                 .FirstOrDefaultAsync(d => d.id == parsedId);
 
+            // проверка на наличие профиля
             if (doctor == null)
             {
-                return new ResponseModel { status = "404", message = "Not found" }; ;
+                throw new KeyNotFoundException();  //ex
             }
 
             // проверка существует ли уже доктор с такой почтой или телефоном
@@ -176,9 +186,9 @@ namespace MIS.Services
                                 .AsNoTracking()
                                 .AnyAsync(d => d.email == doctor.email || d.phone == doctor.phone);
 
-            if (exists)
+            if (exists && doctorEdit.email != doctor.email && doctorEdit.phone != doctor.phone)
             {
-                return new ResponseModel { status = "400", message = "this email or phone number already registered" };
+                throw new ValidationAccessException();
             }
 
             doctor.email = doctorEdit.email;
@@ -188,7 +198,7 @@ namespace MIS.Services
             doctor.phone = doctorEdit.phone;
 
             await _context.SaveChangesAsync();
-            return new ResponseModel { status = "200", message = "Success" };
+            return null;
         }
     }
 }
