@@ -9,6 +9,6 @@
     "\\MIS\\MIS\\Models\\DB",
     "\\MIS\\MIS\\Services"
   ],
-  "SelectedNode": "\\MIS\\MIS\\Controllers\\Consultation.cs",
+  "SelectedNode": "\\MIS\\MIS\\Services\\IInspectionService.cs",
   "PreviewInSolutionExplorer": false
 }

@@ -21,5 +21,7 @@ namespace MIS.Models.DB
         [MinLength(1)]
         public List<DbDiagnosis>? diagnoses { get; set; }
         public List<DbInspectionConsultation>? consultations { get; set; }
+        public bool hasChain { get; set; } = false;
+        public bool hasNested { get; set; } = false;
     }
 }

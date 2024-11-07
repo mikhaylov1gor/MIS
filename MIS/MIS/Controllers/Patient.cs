@@ -32,11 +32,11 @@ namespace MIS.Controllers
         [Authorize]
         [HttpGet]
         public async Task<ActionResult<PatientPagedListModel>> getPatients(
-            [FromQuery] string name,
             [FromQuery] Conclusion[] conclusions,
             [FromQuery] PatientSorting sorting,
             [FromQuery] bool scheduledVisits,
             [FromQuery] bool onlyMine,
+            [FromQuery] string name = "",
             [FromQuery] int page = 1,
             [FromQuery] int size = 5)
         {
@@ -58,8 +58,8 @@ namespace MIS.Controllers
             Guid id,
             [FromQuery] bool grouped,
             [FromQuery] List<Guid> icdRoots,
-            [FromQuery] int page,
-            [FromQuery] int size)
+            [FromQuery] int page = 1,
+            [FromQuery] int size = 5)
         {
             var response = await _patientService.getInspections(id, grouped, icdRoots, page, size);
             return Ok(response);
@@ -75,7 +75,7 @@ namespace MIS.Controllers
 
         [Authorize]
         [HttpGet("{id}/inspections/search")]
-        public async Task<ActionResult<List<InspectionShortModel>>> getShortInspection(Guid id, [FromQuery] string request)
+        public async Task<ActionResult<List<InspectionShortModel>>> getShortInspection(Guid id, [FromQuery] string request = "")
         {
             var response = await _patientService.getShortInspection(id, request);
             return Ok(response);

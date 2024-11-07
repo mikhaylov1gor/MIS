@@ -31,10 +31,12 @@ namespace MIS.Services
         {
             if (start > end)
             {
-                throw new ValidationAccessException();
+                throw new ValidationAccessException("start must be less than end");
             }
             var summaryByRoot = new Dictionary<string, int>();
-            if (icdRoots == null)
+
+            // проверка рутовых диагнозов
+            if (icdRoots.Count() == 0)
             {
                 icdRoots = await _context.Icd10
                     .Where(p => p.parentId == null)
@@ -48,13 +50,35 @@ namespace MIS.Services
                     summaryByRoot.Add(icdRoot.code, 0);
                 }
             }
+            else
+            {
+                var roots = await _context.Icd10
+                    .Where(p => p.parentId == null)
+                    .Select(p => p.id)
+                    .ToListAsync();
+
+                foreach (var root in icdRoots)
+                {
+                    if (!roots.Contains(root))
+                    {
+                        throw new ValidationAccessException("icdRoot not found");//ex
+                    }
+
+                    var icdRoot = await _context.Icd10
+                        .FirstOrDefaultAsync(i => i.id == root);
+                    summaryByRoot.Add(icdRoot.code, 0);
+                }
+            }
             var report = new IcdRootsReportModel();
 
             var filters = new IcdRootsReportFiltersModel { start = start, end = end , icdRoots = icdRoots};
 
             var records = new List<IcdRootsReportRecordModel>();
 
-            var patients = await _context.Patients.ToListAsync();
+            var patients = await _context.Patients
+                .Include(p=>p.inspections)
+                    .ThenInclude(i=>i.diagnoses)
+                .ToListAsync();
 
             foreach (var patient in patients)
             {
@@ -71,26 +95,27 @@ namespace MIS.Services
                     if (inspection.date >= start && inspection.date <= end)
                     {
                         var diagnoses = inspection.diagnoses;
-                        
+
                         foreach (var diagnosis in diagnoses)
                         {
                             var code = diagnosis.code;
-                            var matchingIcd10s = await _context.Icd10
+                            var matchingIcd10 = await _context.Icd10
                                 .Where(c => c.code == code)
-                                .ToListAsync();
-                            foreach (var icd10 in matchingIcd10s)
-                            {
-                                if (icdRoots.Contains(icd10.id) || icdRoots.Contains(icd10.parentId.Value))
-                                {
-                                    isSatisfy = true;
+                                .FirstOrDefaultAsync();
 
-                                    if (summaryByRoot.ContainsKey(icd10.code))
-                                    {
-                                        summaryByRoot[icd10.code]++;
-                                        visitsByRoot[icd10.code]++;
-                                    }
+
+                            if (icdRoots.Contains(matchingIcd10.id) ||
+                               (matchingIcd10.parentId.HasValue && icdRoots.Contains(matchingIcd10.parentId.Value)))
+                            {
+                                isSatisfy = true;
+
+                                if (summaryByRoot.ContainsKey(matchingIcd10.code))
+                                {
+                                    summaryByRoot[matchingIcd10.code]++;
+                                    visitsByRoot[matchingIcd10.code]++;
                                 }
                             }
+
                         }
                     }
                 }
@@ -104,10 +129,13 @@ namespace MIS.Services
                         gender = patient.gender,
                         visitsByRoot = visitsByRoot
                     };
-                    report.records.Add(record);
+                    records.Add(record);
                 }
             }
 
+            report.filters = filters;
+            report.records = records;
+            report.summaryByRoot = summaryByRoot;
             return report;
         }
     }

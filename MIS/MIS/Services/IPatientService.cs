@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using MIS.Middleware;
 using MIS.Models.DB;
 using MIS.Models.DTO;
@@ -77,7 +78,7 @@ namespace MIS.Services
             // проверка на валидность пагинации
             if (page < 1 || size < 1)
             {
-                throw new ValidationAccessException();
+                throw new ValidationAccessException("page or size must be greater than one");
             }
             // проверка на аутентификацию
             var doctorId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -88,6 +89,8 @@ namespace MIS.Services
 
             // выборка по имени
             var query = _context.Patients
+                .Include(p => p.inspections)
+                    .ThenInclude(i => i.doctor)
                 .Where(i => EF.Functions.Like(i.name, $"%{name}%"));
 
             // выборка по заключениям
@@ -173,9 +176,7 @@ namespace MIS.Services
             // проверка на аутентификацию
             var doctorId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (doctorId == null || !Guid.TryParse(doctorId, out var parsedId))
-            {
                 throw new UnauthorizedAccessException();
-            }
 
             var doctor = await _context.Doctors
                 .FirstOrDefaultAsync(d => d.id == parsedId);
@@ -184,25 +185,37 @@ namespace MIS.Services
             var rootPatient = await _context.Patients.FindAsync(id);
 
             if (rootPatient == null)
-            {
-                throw new KeyNotFoundException(); //ex
-            }
+                throw new KeyNotFoundException("patient not found"); //ex
 
-            // проверка предыдущего осмотра (проверка на смерть)
+            // проверка на валидацию модели
+            if (model.date == null || model.complaints == null || model.anamnesis == null || model.treatment == null)
+                throw new ValidationAccessException("some of model parameters is required"); //ex
+
+            // проверка предыдущего осмотра (проверка на смерть, на наличие дочернего)
             var previousInspection = await _context.Inspections.FindAsync(model.previousInspectionId);
 
             if (previousInspection != null && previousInspection.conclusion == Conclusion.Death)
-            {
-                throw new ValidationAccessException(); //ex
-            }
+                throw new ValidationAccessException("patient dead"); //ex
+
+            if (previousInspection != null && previousInspection.hasNested)
+                throw new ValidationAccessException("this inspection already have child inspection"); //
 
             // доп проверки
-            if (model.conclusion == Conclusion.Death && model.nextVisitDate == null ||
-                model.nextVisitDate < model.date)
-            {
-                throw new ValidationAccessException(); //ex
-            }
+
+            if (model.conclusion == Conclusion.Death)
+                model.nextVisitDate = null;
+
+            if (model.nextVisitDate < model.date)
+                throw new ValidationAccessException("next visit date must be greater than inspection's date"); // ex
+
+            if (model.deathDate != null && model.deathDate > DateTime.UtcNow)
+                throw new ValidationAccessException("death date must be less than current DateTime"); // ex
+
+            if (model.date > DateTime.UtcNow)
+                throw new ValidationAccessException("inspection's date must be less than current DateTime"); //ex
+
             if (model.deathDate != null) { model.conclusion = Conclusion.Death; }
+
             // создание модели осмотра
             var inspection = new DbInspection
             {
@@ -218,32 +231,20 @@ namespace MIS.Services
                 patient = rootPatient,
                 doctor = doctor
             };
-       
-            if (inspection.previousInspectionId == null)
-            {
-                inspection.baseInspectionId = inspection.id;
-            }
-            else
-            {
-                previousInspection = await _context.Inspections.FindAsync(inspection.previousInspectionId);
-                if (previousInspection == null)
-                {
-                    throw new KeyNotFoundException(); //ex
-                }
-                inspection.baseInspectionId = previousInspection.baseInspectionId;
-            }
-
-
+            await _context.AddAsync(inspection);
             // трансформация консультаций
             inspection.consultations = new List<DbInspectionConsultation>();
 
             foreach (var consultation in model.consultations)
             {
                 var DBSpecialty = await _context.Specialties.FindAsync(consultation.specialityId);
+
                 if (DBSpecialty == null) 
-                {
-                    throw new KeyNotFoundException(); //ex
-                }
+                    throw new KeyNotFoundException("specialty not found"); //ex
+
+                if (inspection.consultations.Any(s => s.speciality.id == DBSpecialty.id) | consultation.comment == null)
+                    throw new ValidationAccessException("this specialty already exists or comment is null"); //ex
+
                 inspection.consultations.Add(new DbInspectionConsultation
                 {
                     createTime = DateTime.UtcNow,
@@ -260,7 +261,7 @@ namespace MIS.Services
                     commentsNumber = 1
                 });
             }
-
+  
             // трансформация диагнозов
             inspection.diagnoses = new List<DbDiagnosis>();
             bool isMainExist = false; // проверка на один мейн диагноз
@@ -270,13 +271,12 @@ namespace MIS.Services
                 var icd10Record = await _context.Icd10.FindAsync(d.icdDiagnosisId);
                 if (icd10Record == null)
                 {
-                    throw new KeyNotFoundException(); //ex
+                    throw new KeyNotFoundException("icdDiagnosis not found"); //ex
                 }
                 if (d.type == DiagnosisType.Main)
                 {
-                    if (isMainExist) throw new ValidationAccessException();
+                    if (isMainExist) throw new ValidationAccessException("there should be only one main diagnosis");
                     else isMainExist = true;
-                    if (icd10Record.parentId != null) throw new ValidationAccessException(); // если основной диагноз не является корневым элементов мкб
                 }
                 {
                     inspection.diagnoses.Add(new DbDiagnosis
@@ -287,16 +287,43 @@ namespace MIS.Services
                         description = d.description,
                         type = d.type
                     });
-
                 };
             }
+            if (!isMainExist)
+                throw new ValidationAccessException("there is no main diagnosis");//ex
 
-            await _context.AddAsync(inspection);
+            //
+
+            if (model.previousInspectionId == null)
+            {
+                inspection.baseInspectionId = inspection.id;
+            }
+            else
+            {
+                previousInspection = await _context.Inspections.FindAsync(inspection.previousInspectionId);
+                if (previousInspection == null)
+                    throw new KeyNotFoundException("previous inspection not found"); //ex
+
+                inspection.baseInspectionId = previousInspection.baseInspectionId;
+            }
+
+            if (inspection.previousInspectionId != null)
+            {
+                var prev = await _context.Inspections.FindAsync(inspection.previousInspectionId);
+                prev.nextVisitDate = inspection.date;
+                if (prev.hasNested)
+                    throw new ValidationAccessException("this inspection already have child inspection");//ex
+
+                prev.hasNested = true;
+                if (prev.baseInspectionId == prev.id)
+                    prev.hasChain = true;
+            }
+
             await _context.SaveChangesAsync();
             return inspection.id;
 
         }
-        // !!!!!!!!!!!!
+
         public async Task<InspectionPagedListModel> getInspections(
             Guid PatientId,
             [FromQuery] bool grouped,
@@ -304,7 +331,115 @@ namespace MIS.Services
             [FromQuery] int page,
             [FromQuery] int size)
         {
-            return null;
+            var patient = await _context.Patients
+                .Where(i => i.id == PatientId)
+                .FirstOrDefaultAsync();
+
+            if (patient == null)
+                throw new KeyNotFoundException("patient not found"); //ex
+
+            if (page < 1 || size < 1)
+                throw new ValidationAccessException("page or size must be greater than 0");
+
+
+            // проверка рутовых диагнозов
+            if (icdRoots.Count == 0)
+            {
+                icdRoots = await _context.Icd10
+                    .Where(p => p.parentId == null)
+                    .Select(p => p.id)
+                    .ToListAsync();
+            }
+            else
+            {
+                var roots = await _context.Icd10
+                    .Where(p => p.parentId == null)
+                    .Select(p => p.id)
+                    .ToListAsync();
+
+                foreach (var root in icdRoots)
+                {
+                    if (!roots.Contains(root))
+                    {
+                        throw new ValidationAccessException("icdRoot not found");//ex
+                    }
+                }
+            }
+
+            var icdCodes = await _context.Icd10
+                .Where(i => icdRoots.Contains(i.id))
+                .Select(c => c.code)
+                .ToListAsync();
+            var query = new List<DbInspection>();
+
+            if (grouped)
+            {
+                query = await _context.Inspections
+                    .Include(p => p.patient)
+                    .Include(d => d.diagnoses)
+                    .Include(d => d.doctor)
+                    .Where(p => p.patient.id == PatientId &&
+                                p.diagnoses.Any(d => icdCodes.Contains(d.code)) &&
+                                (p.previousInspectionId == null))
+                    .Skip((page - 1) * size)
+                    .Take(size)
+                    .ToListAsync();
+            }
+            else
+            {
+                query = await _context.Inspections
+                   .Include(p => p.patient)
+                   .Include(d => d.diagnoses)
+                   .Include(d => d.doctor)
+                   .Where(p => p.patient.id == PatientId &&
+                               p.diagnoses.Any(d => icdCodes.Contains(d.code)))
+                   .Skip((page - 1) * size)
+                   .Take(size)
+                   .ToListAsync();
+            }
+
+            var inspections = new List<InspectionPreviewModel>();
+            foreach (var inspection in query)
+            {
+                var mainDiagnosis = inspection.diagnoses
+                    .Where(d => d.type == DiagnosisType.Main)
+                    .FirstOrDefault();
+
+                var previewInspection = new InspectionPreviewModel
+                {
+                    id = inspection.id,
+                    createTime = inspection.createTime,
+                    previousId = inspection.previousInspectionId,
+                    date = inspection.date,
+                    conclusion = inspection.conclusion,
+                    doctorId = inspection.doctor.id,
+                    doctor = inspection.doctor.name,
+                    patientId = inspection.patient.id,
+                    patient = inspection.patient.name,
+                    diagnosis = new DiagnosisModel
+                    {
+                        id = mainDiagnosis.id,
+                        createTime = mainDiagnosis.createTime,
+                        code = mainDiagnosis.code,
+                        name = mainDiagnosis.name,
+                        description = mainDiagnosis.description,
+                        type = mainDiagnosis.type,
+                    },
+                    hasChain = inspection.hasChain,
+                    hasNested = inspection.hasNested,
+                };
+
+                inspections.Add(previewInspection);
+            }
+
+            var pageInfo = new PageInfoModel
+            {
+                size = size,
+                count = (int)Math.Ceiling((double)inspections.Count/size),
+                current = page
+            };
+
+            return new InspectionPagedListModel { inspections = inspections, pagination = pageInfo };
         }
 
         public async Task<PatientModel> getPatient(Guid id)
@@ -313,7 +448,7 @@ namespace MIS.Services
 
             if (DBpatient == null)
             {
-                throw new KeyNotFoundException(); //ex
+                throw new KeyNotFoundException("patient not found"); //ex
             }
             else
             {
@@ -331,20 +466,23 @@ namespace MIS.Services
 
         public async Task<List<InspectionShortModel>> getShortInspection(Guid id, string request)
         {
-            var patient = await _context.Patients.FindAsync(id);
+            var patient = await _context.Patients
+                .Where(i=>i.id == id)
+                .FirstOrDefaultAsync();
 
             if (patient == null)
             {
-                throw new KeyNotFoundException();
+                throw new KeyNotFoundException("patient not found");
             }
 
-            var query = patient.inspections
-                .Where(d => d.diagnoses.Any(r => EF.Functions.Like(r.name, $"%{request}") || EF.Functions.Like(r.code, $"%{request}")));
+            var query = await _context.Inspections
+                .Include(d=>d.diagnoses)
+                .Where(i => i.patient.id == id &&
+                             i.diagnoses.Any(d =>
+                                EF.Functions.Like(d.name, $"%{request}%") ||
+                                EF.Functions.Like(d.code, $"%{request}%")))
+                .ToListAsync();
 
-            if (query.Count() == 0)
-            {
-                return null;
-            }
             var inspections = new List<InspectionShortModel>();
 
             foreach ( var inspectionDb in query)
@@ -367,6 +505,8 @@ namespace MIS.Services
                     date = inspectionDb.date,
                     diagnosis = diagnosis
                 };
+
+                inspections.Add(inspection);
             }  
 
             return inspections;

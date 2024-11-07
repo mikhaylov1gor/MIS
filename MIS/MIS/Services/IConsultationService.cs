@@ -51,7 +51,7 @@ namespace MIS.Services
             // проверка на пагинацию
             if (page < 1 || size < 1)
             {
-                throw new ValidationAccessException();//ex
+                throw new ValidationAccessException("page or size must be greater than 0");//ex
             }
 
             // проверка рутовых диагнозов
@@ -73,7 +73,7 @@ namespace MIS.Services
                 {
                     if (!roots.Contains(root))
                     {
-                        throw new ValidationAccessException();//ex
+                        throw new ValidationAccessException("icdRoot not found");//ex
                     }
                 }
             }
@@ -231,7 +231,7 @@ namespace MIS.Services
 
             if (DBmodel == null)
             {
-                throw new KeyNotFoundException();//ex
+                throw new KeyNotFoundException("not found");//ex
             }
 
             var consultation = new ConsultationModel
@@ -266,7 +266,7 @@ namespace MIS.Services
             var parentComment = await _context.Comments.FindAsync(comment.parentId);
             if (consultation == null  || parentComment == null)
             {
-                throw new KeyNotFoundException();// ex
+                throw new KeyNotFoundException("contultation or parent comment not found");// ex
             }
 
             // проверка доступа
@@ -276,7 +276,7 @@ namespace MIS.Services
 
             if (consultation.speciality.id != doctor.specialtyId || inspection.doctor.id != doctor.id)
             {
-                throw new ForbiddenAccessException();//ex
+                throw new ForbiddenAccessException("forbidden");//ex
             }
 
             var newComment = new DbComment
@@ -305,12 +305,12 @@ namespace MIS.Services
             var comment = await _context.Comments.FindAsync(id);
             if (comment == null)
             {
-                throw new KeyNotFoundException();//ex
+                throw new KeyNotFoundException("comment not found");//ex
             }
             // проверка на право доступа
             if (comment.authorId != parsedId)
             {
-                throw new ValidationAccessException();
+                throw new ValidationAccessException("forbidden");
             }
 
             else

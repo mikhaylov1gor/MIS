@@ -147,7 +147,7 @@ namespace MIS.Services
             // проверка на наличие профиля
             if (doctor == null)
             {
-                throw new KeyNotFoundException();  //ex
+                throw new KeyNotFoundException("doctor not found");  //ex
             }
 
             return new DoctorModel
@@ -178,7 +178,7 @@ namespace MIS.Services
             // проверка на наличие профиля
             if (doctor == null)
             {
-                throw new KeyNotFoundException();  //ex
+                throw new KeyNotFoundException("doctor not found");  //ex
             }
 
             // проверка существует ли уже доктор с такой почтой или телефоном
@@ -188,7 +188,7 @@ namespace MIS.Services
 
             if (exists && doctorEdit.email != doctor.email && doctorEdit.phone != doctor.phone)
             {
-                throw new ValidationAccessException();
+                throw new ValidationAccessException("this email or phone already exists");
             }
 
             doctor.email = doctorEdit.email;

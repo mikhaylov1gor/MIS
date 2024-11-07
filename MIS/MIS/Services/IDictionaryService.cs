@@ -71,9 +71,9 @@ namespace MIS.Services
                 [FromQuery] int page,
                 [FromQuery] int size)
         {
-            if (page < 0 || size < 0)
+            if (page < 1 || size < 1)
             {
-                throw new ValidationAccessException();//ex
+                throw new ValidationAccessException("page or size must be greater than 0");//ex
             }
 
             var query = _context.Icd10

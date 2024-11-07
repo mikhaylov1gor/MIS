@@ -210,6 +210,12 @@ namespace MIS.Migrations
                     b.Property<Guid>("doctorid")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("hasChain")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("hasNested")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("nextVisitDate")
                         .HasColumnType("datetime2");
 
