@@ -7,8 +7,9 @@
     "\\MIS\\MIS\\Middleware",
     "\\MIS\\MIS\\Models",
     "\\MIS\\MIS\\Models\\DB",
+    "\\MIS\\MIS\\Models\\DTO",
     "\\MIS\\MIS\\Services"
   ],
-  "SelectedNode": "\\MIS\\MIS\\Services\\IInspectionService.cs",
+  "SelectedNode": "\\MIS\\MIS\\Models\\DB\\DbConsultation.cs",
   "PreviewInSolutionExplorer": false
 }

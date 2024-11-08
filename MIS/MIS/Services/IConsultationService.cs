@@ -64,10 +64,10 @@ namespace MIS.Services
             }
             else
             {
-                var roots  = await _context.Icd10
+                var roots = await _context.Icd10
                     .Where(p => p.parentId == null)
                     .Select(p => p.id)
-                    .ToListAsync(); 
+                    .ToListAsync();
 
                 foreach (var root in icdRoots)
                 {
@@ -77,123 +77,58 @@ namespace MIS.Services
                     }
                 }
             }
-            
+
+            var icdCodes = await _context.Icd10
+                    .Where(i => icdRoots.Contains(i.id))
+                    .Select(c => c.code)
+                    .ToListAsync();
+            var query = new List<DbInspection>();
+
             var inspections = new List<InspectionPreviewModel>();
 
             if (grouped)
             {
-                var query = _context.Inspections
-                    .Include(i => i.doctor)
-                    .Include(i => i.patient)
-                    .Include(i => i.diagnoses);
-
-                var groupedInspections = new List<DbInspection>();
-                var allInspections = await query.ToListAsync();
-
-
-                foreach (var inspection in allInspections)
-                {
-                    if (groupedInspections.Contains(inspection))
-                    {
-                        continue;
-                    }
-                    var chain = new List<DbInspection>();
-                    var currentInspection = inspection;
-
-                    while (currentInspection.previousInspectionId != null)
-                    {
-                        chain.Add(currentInspection);
-                        currentInspection = allInspections.FirstOrDefault(i => i.id == currentInspection.previousInspectionId);
-                        if (groupedInspections.Contains(currentInspection)) break;
-                        chain.Add(currentInspection);
-                    }
-                    if (currentInspection != null)
-                    {
-                        groupedInspections.Add(currentInspection);
-                    }
-                    groupedInspections.AddRange(chain);
-                }
-
-                // дублирование кода (по-другому не знаю как сделать)
-                var total = groupedInspections.Count();
-
-                inspections = groupedInspections
-                    .Skip((page - 1) * size)
-                    .Take(size)
-                    .Where(i =>
-                    (i.diagnoses.Any(d => _context.Icd10.Any(b => b.code == d.code) && d.type == DiagnosisType.Main))
-                    &&
-                    i.consultations.Any(c => c.speciality.id == doctor.specialtyId))
-                    .Select(i => new InspectionPreviewModel
-                    {
-                        id = i.id,
-                        createTime = i.createTime,
-                        previousId = i.previousInspectionId,
-                        date = i.date,
-                        conclusion = i.conclusion,
-                        doctorId = i.doctor.id,
-                        doctor = i.doctor.name,
-                        patientId = i.patient.id,
-                        patient = i.patient.name,
-                        diagnosis = i.diagnoses
-                                    .Where(b => b.type == DiagnosisType.Main)
-                                    .Select(b => new DiagnosisModel
-                                    {
-                                        id = b.id,
-                                        createTime = b.createTime,
-                                        code = b.code,
-                                        name = b.name,
-                                        description = b.description,
-                                        type = b.type
-                                    })
-                                    .FirstOrDefault(),
-                        hasChain = (i.previousInspectionId != null),
-                        hasNested = (i.nextVisitDate != null),
-                    })
-                    .ToList();
-
-                var pageInf = new PageInfoModel
-                {
-                    size = size,
-                    count = (int)Math.Ceiling((double)total / size),
-                    current = page
-                };
-
-                return new InspectionPagedListModel
-                {
-                    inspections = inspections,
-                    pagination = pageInf
-                };
+                query = await _context.Inspections
+                   .Include(p => p.patient)
+                   .Include(d => d.diagnoses)
+                   .Include(d => d.doctor)
+                   .Where(i => (i.diagnoses.Any(d => _context.Icd10.Any(b => b.code == d.code) && d.type == DiagnosisType.Main)) &&
+                                i.consultations.Any(c => c.speciality.id == doctor.specialtyId) &&
+                                i.previousInspectionId == null)
+                   .Skip((page - 1) * size)
+                   .Take(size)
+                   .ToListAsync();
             }
             else
             {
-                // запрос осмотров со специальностью доктора и мейн диагнозом соответстующим фильтрам
-                var query = _context.Inspections
-                    .Include(i => i.doctor)
-                    .Include(i => i.patient)
-                    .Include(i => i.diagnoses)
-                        .Where(i =>
-                                    (i.diagnoses.Any(d => _context.Icd10.Any(b => b.code == d.code) && d.type == DiagnosisType.Main))
-                                    &&
-                                    i.consultations.Any(c => c.speciality.id == doctor.specialtyId));
+                query = await _context.Inspections
+                   .Include(p => p.patient)
+                   .Include(d => d.diagnoses)
+                   .Include(d => d.doctor)
+                   .Include(c => c.consultations)
+                   .Where(i => (i.diagnoses.Any(d => _context.Icd10.Any(b => b.code == d.code) && d.type == DiagnosisType.Main)) &&
+                                i.consultations.Any(c => c.speciality.id == doctor.specialtyId))
+                   .Skip((page - 1) * size)
+                   .Take(size)
+                   .ToListAsync();
+            }
 
-                var totalItems = await query.CountAsync();
+            var totalItems = query.Count();
 
-                inspections = await query
-                    .Skip((page - 1) * size)
-                    .Take(size)
-                    .Select(i => new InspectionPreviewModel
-                    {
-                        id = i.id,
-                        createTime = i.createTime,
-                        previousId = i.previousInspectionId,
-                        date = i.date,
-                        conclusion = i.conclusion,
-                        doctorId = i.doctor.id,
-                        doctor = i.doctor.name,
-                        patientId = i.patient.id,
-                        patient = i.patient.name,
-                        diagnosis = i.diagnoses
+            foreach (var inspection in query)
+            {
+                var previewInspection = new InspectionPreviewModel
+                {
+                    id = inspection.id,
+                    createTime = inspection.createTime,
+                    previousId = inspection.previousInspectionId,
+                    date = inspection.date,
+                    conclusion = inspection.conclusion,
+                    doctorId = inspection.doctor.id,
+                    doctor = inspection.doctor.name,
+                    patientId = inspection.patient.id,
+                    patient = inspection.patient.name,
+                    diagnosis = inspection.diagnoses
                                     .Where(b => b.type == DiagnosisType.Main)
                                     .Select(b => new DiagnosisModel
                                     {
@@ -205,29 +140,34 @@ namespace MIS.Services
                                         type = b.type
                                     })
                                     .FirstOrDefault(),
-                        hasChain = (i.previousInspectionId != null),
-                        hasNested = (i.nextVisitDate != null),
-                    })
-                    .ToListAsync();
-
-                var pageInfo = new PageInfoModel
-                {
-                    size = size,
-                    count = (int)Math.Ceiling((double)totalItems / size),
-                    current = page
+                    hasChain = inspection.hasChain,
+                    hasNested = inspection.hasNested
                 };
-
-                return new InspectionPagedListModel
-                {
-                    inspections = inspections,
-                    pagination = pageInfo
-                };
+                inspections.Add(previewInspection);
             }
+
+            var pageInfo = new PageInfoModel
+            {
+                size = size,
+                count = (int)Math.Ceiling((double)totalItems / size),
+                current = page
+            };
+
+            return new InspectionPagedListModel
+            {
+                inspections = inspections,
+                pagination = pageInfo
+            };
         }
 
         public async Task<ConsultationModel> GetById(Guid id)
         {
-            var DBmodel = await _context.Consultations.FindAsync(id);
+            var DBmodel = await _context.InspetionConsultations
+                .Include(s => s.speciality)
+                .Include(r => r.rootComment)
+                    .ThenInclude(a => a.author)
+                .Where(i => i.id == id)
+                .FirstOrDefaultAsync();
 
             if (DBmodel == null)
             {
@@ -236,6 +176,7 @@ namespace MIS.Services
 
             var consultation = new ConsultationModel
             {
+                id = DBmodel.id,
                 createTime = DBmodel.createTime,
                 inspectionId = DBmodel.inspectionId,
                 speciality = new SpecialtyModel
@@ -246,8 +187,39 @@ namespace MIS.Services
                 }
             };
 
-            return consultation;
+            // нахождение комментариев
+            var comments = new List<DbInspectionComment>();
+            var currentComment = DBmodel.rootComment;
 
+            while (currentComment != null)
+            {
+                comments.Add(currentComment);
+                currentComment = await _context.InspectionComments
+                    .Include(d => d.author)
+                    .Where(i => i.parentId == currentComment.id)
+                    .FirstOrDefaultAsync();
+            }
+
+            // трансформация комментариев
+            var DTOcomments = new List<CommentModel>();
+            foreach (var comment in comments)
+            {
+                var DTOcomment = new CommentModel
+                {
+                    id = comment.id,
+                    createTime = comment.createTime,
+                    modifiedDate = comment.modifyTime,
+                    content = comment.content,
+                    authorId = comment.author.id,
+                    author = comment.author.name,
+                    parentId = comment.parentId,
+                };
+                DTOcomments.Add(DTOcomment);
+            }
+
+            consultation.comments = DTOcomments;
+
+            return consultation;
         }
 
         public async Task<Guid> CreateById (Guid id, CommentCreateModel comment, ClaimsPrincipal user)
@@ -258,19 +230,24 @@ namespace MIS.Services
             {
                 throw new UnauthorizedAccessException(); //ex
             }
-
-            // проверка на наличие консультации или родительского комментария
             var doctor = await _context.Doctors.FindAsync(parsedId);
 
-            var consultation = await _context.Consultations.FindAsync(id);
-            var parentComment = await _context.Comments.FindAsync(comment.parentId);
-            if (consultation == null  || parentComment == null)
+            // проверка на наличие консультации или родительского комментария
+            var consultation = await _context.InspetionConsultations
+                .Include(s => s.speciality)
+                .Include(r => r.rootComment)
+                .Where(i => i.id == id)
+                .FirstOrDefaultAsync();
+
+            var parentComment = await _context.InspectionComments.FindAsync(comment.parentId);
+            if (consultation == null || parentComment == null)
             {
-                throw new KeyNotFoundException("contultation or parent comment not found");// ex
+                throw new KeyNotFoundException("consultation or parent comment not found");// ex
             }
 
             // проверка доступа
             var inspection = await _context.Inspections
+                .Include(d=> d.doctor)
                 .Where(i => i.id == consultation.inspectionId)
                 .FirstOrDefaultAsync();
 
@@ -279,17 +256,18 @@ namespace MIS.Services
                 throw new ForbiddenAccessException("forbidden");//ex
             }
 
-            var newComment = new DbComment
+            var newComment = new DbInspectionComment
             {
                 createTime = DateTime.UtcNow,
-                authorId = parsedId,
-                author = doctor.name,
+                parentId = parentComment.id,
                 content = comment.content,
-                parentId = parentComment.id
+                author = doctor,
             };
 
-            consultation.comments.Add(newComment);
+            consultation.commentsNumber++;
 
+            await _context.InspectionComments.AddAsync(newComment);
+            await _context.SaveChangesAsync();
             return newComment.id;
         }
 
@@ -302,24 +280,30 @@ namespace MIS.Services
                 throw new UnauthorizedAccessException(); //ex
             }
             // проверка на наличие
-            var comment = await _context.Comments.FindAsync(id);
+            var comment = await _context.InspectionComments
+                .Include(d => d.author)
+                .Where(i => i.id == id)
+                .FirstOrDefaultAsync();
+
             if (comment == null)
             {
                 throw new KeyNotFoundException("comment not found");//ex
             }
             // проверка на право доступа
-            if (comment.authorId != parsedId)
+            if (comment.author.id != parsedId)
             {
                 throw new ValidationAccessException("forbidden");
             }
 
             else
             {
-                comment.modifiedDate = DateTime.UtcNow;
+                comment.modifyTime = DateTime.UtcNow;
                 comment.content = newComment.content;
                 await _context.SaveChangesAsync();
                 return null;
             }  
+
+
         }
     }
 }
