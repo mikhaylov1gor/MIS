@@ -98,6 +98,9 @@ namespace MIS.Services
 
                         foreach (var diagnosis in diagnoses)
                         {
+                            if (diagnosis.type != DiagnosisType.Main) // подсчет только по главным диагнозам
+                                continue;
+
                             var code = diagnosis.code;
                             var matchingIcd10 = await _context.Icd10
                                 .Where(c => c.code == code)
@@ -132,6 +135,7 @@ namespace MIS.Services
                     records.Add(record);
                 }
             }
+            records.OrderBy(p => p.patientName);
 
             report.filters = filters;
             report.records = records;

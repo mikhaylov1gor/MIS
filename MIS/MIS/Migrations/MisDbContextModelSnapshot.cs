@@ -22,64 +22,6 @@ namespace MIS.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("MIS.Models.DB.DbComment", b =>
-                {
-                    b.Property<Guid>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("DbConsultationid")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("author")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("authorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("createTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("modifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("parentId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("DbConsultationid");
-
-                    b.ToTable("Comments");
-                });
-
-            modelBuilder.Entity("MIS.Models.DB.DbConsultation", b =>
-                {
-                    b.Property<Guid>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("createTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("inspectionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("specialityid")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("specialityid");
-
-                    b.ToTable("Consultations");
-                });
-
             modelBuilder.Entity("MIS.Models.DB.DbDiagnosis", b =>
                 {
                     b.Property<Guid>("id")
@@ -247,12 +189,13 @@ namespace MIS.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("content")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<DateTime>("createTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("modifyTime")
+                    b.Property<DateTime?>("modifyTime")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("parentId")
@@ -360,24 +303,6 @@ namespace MIS.Migrations
                     b.ToTable("TokenBlackList");
                 });
 
-            modelBuilder.Entity("MIS.Models.DB.DbComment", b =>
-                {
-                    b.HasOne("MIS.Models.DB.DbConsultation", null)
-                        .WithMany("comments")
-                        .HasForeignKey("DbConsultationid");
-                });
-
-            modelBuilder.Entity("MIS.Models.DB.DbConsultation", b =>
-                {
-                    b.HasOne("MIS.Models.DB.DbSpecialty", "speciality")
-                        .WithMany()
-                        .HasForeignKey("specialityid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("speciality");
-                });
-
             modelBuilder.Entity("MIS.Models.DB.DbDiagnosis", b =>
                 {
                     b.HasOne("MIS.Models.DB.DbInspection", null)
@@ -436,11 +361,6 @@ namespace MIS.Migrations
                     b.Navigation("rootComment");
 
                     b.Navigation("speciality");
-                });
-
-            modelBuilder.Entity("MIS.Models.DB.DbConsultation", b =>
-                {
-                    b.Navigation("comments");
                 });
 
             modelBuilder.Entity("MIS.Models.DB.DbInspection", b =>

@@ -12,8 +12,28 @@ using Microsoft.AspNetCore.Authorization.Infrastructure;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text.Json.Serialization;
 using MIS.Middleware;
+using Quartz;
+using MIS.Infrastucture.Email;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//quartz
+builder.Services.AddQuartz(q =>
+{
+    q.UseMicrosoftDependencyInjectionJobFactory(); 
+    var jobKey = new JobKey("MissedAppointmentsNotificationJob");
+
+    q.AddJob<SkippedVisitsNotificationJob>(opts => opts.WithIdentity(jobKey));  
+    q.AddTrigger(opts => opts
+        .ForJob(jobKey)  
+        .WithIdentity("SkippedVisitsNotificationJob-trigger")
+        .WithCronSchedule("0 1 1 * * ?")); 
+});
+builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
+
+//smtp
+builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -95,6 +115,7 @@ using (var scope = app.Services.CreateScope())
     await seedDataService.SeedSpecialties();
     await seedDataService.SeedIcd10();
 }
+
 
 
 // Configure the HTTP request pipeline.

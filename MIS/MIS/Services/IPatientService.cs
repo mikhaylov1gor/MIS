@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.IdentityModel.Abstractions;
 using MIS.Middleware;
 using MIS.Models.DB;
 using MIS.Models.DTO;
@@ -111,7 +112,7 @@ namespace MIS.Services
             if (scheduledVisits)
             {
                 query = query
-                    .Where(p => p.inspections.Any(n => n.nextVisitDate != null));
+                    .Where(p => p.inspections.Any(n => n.nextVisitDate != null && !n.hasNested));
             }
 
             // сортировка
@@ -191,30 +192,45 @@ namespace MIS.Services
             if (model.date == null || model.complaints == null || model.anamnesis == null || model.treatment == null)
                 throw new ValidationAccessException("some of model parameters is required"); //ex
 
-            // проверка предыдущего осмотра (проверка на смерть, на наличие дочернего)
+            // проверка предыдущего осмотра (проверка на смерть/выздоровление, на наличие дочернего)
             var previousInspection = await _context.Inspections.FindAsync(model.previousInspectionId);
 
             if (previousInspection != null && previousInspection.conclusion == Conclusion.Death)
                 throw new ValidationAccessException("patient dead"); //ex
 
+            if (previousInspection != null && previousInspection.conclusion == Conclusion.Recovery)
+                throw new ValidationAccessException("patient recovered"); //ex
+
             if (previousInspection != null && previousInspection.hasNested)
                 throw new ValidationAccessException("this inspection already have child inspection"); //
 
             // доп проверки
+            if (previousInspection != null && previousInspection.date > model.date) 
+                throw new ValidationAccessException("date of inspection must be less than parent inspection date"); //ex
 
-            if (model.conclusion == Conclusion.Death)
-                model.nextVisitDate = null;
+            if (model.conclusion == Conclusion.Disease && !model.nextVisitDate.HasValue)
+                throw new ValidationAccessException("model conclusion id disease but next visit date doesnt exists"); //ex
+
+            if (model.conclusion == Conclusion.Recovery && model.nextVisitDate.HasValue)
+                throw new ValidationAccessException("model conclusion is recovery but next visit date exists");//ex
+
+            if (model.conclusion == Conclusion.Death && model.nextVisitDate.HasValue)
+                throw new ValidationAccessException("model conculsion is death but next visit date exists");//ex
+
+            if (model.conclusion == Conclusion.Death && !model.deathDate.HasValue)
+                throw new ValidationAccessException("model conclusion is death but death date doesnt exists"); //ex
 
             if (model.nextVisitDate < model.date)
                 throw new ValidationAccessException("next visit date must be greater than inspection's date"); // ex
 
-            if (model.deathDate != null && model.deathDate > DateTime.UtcNow)
+            if (model.deathDate.HasValue && model.deathDate > DateTime.UtcNow)
                 throw new ValidationAccessException("death date must be less than current DateTime"); // ex
 
             if (model.date > DateTime.UtcNow)
                 throw new ValidationAccessException("inspection's date must be less than current DateTime"); //ex
 
-            if (model.deathDate != null) { model.conclusion = Conclusion.Death; }
+            if (model.deathDate.HasValue && model.conclusion != Conclusion.Death)
+                throw new ValidationAccessException("death date exists, but conclusion isnt death"); //ex
 
             // создание модели осмотра
             var inspection = new DbInspection

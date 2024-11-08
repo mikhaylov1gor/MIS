@@ -77,7 +77,7 @@ namespace MIS.Services
             }
 
             var query = _context.Icd10
-                .Where(i => EF.Functions.Like(i.code, $"%{request}%") || EF.Functions.Like(i.name, $"%{request}%"));
+                .Where(i => (EF.Functions.Like(i.code, $"%{request}%") || EF.Functions.Like(i.name, $"%{request}%")) && i.parentId != null);
 
             var totalItems = await query.CountAsync();
 

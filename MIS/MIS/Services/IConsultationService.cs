@@ -251,6 +251,18 @@ namespace MIS.Services
                 .Where(i => i.id == consultation.inspectionId)
                 .FirstOrDefaultAsync();
 
+            if (comment.content.Length < 1 || comment.content.Length >= 1000)
+                throw new ValidationAccessException("comment length must be greater than 1"); // ex
+
+            // проверка на принадлежность комментария консультации
+            var currentComment = parentComment;
+            while (currentComment.parentId != null)
+            {
+                currentComment = await _context.InspectionComments.FindAsync(currentComment.parentId);
+            }
+            if (consultation.rootComment != currentComment)
+                throw new ValidationAccessException("this comment doesnt belong to consultation"); //ex
+
             if (consultation.speciality.id != doctor.specialtyId || inspection.doctor.id != doctor.id)
             {
                 throw new ForbiddenAccessException("forbidden");//ex
@@ -279,6 +291,7 @@ namespace MIS.Services
             {
                 throw new UnauthorizedAccessException(); //ex
             }
+
             // проверка на наличие
             var comment = await _context.InspectionComments
                 .Include(d => d.author)
@@ -286,14 +299,15 @@ namespace MIS.Services
                 .FirstOrDefaultAsync();
 
             if (comment == null)
-            {
                 throw new KeyNotFoundException("comment not found");//ex
-            }
+
             // проверка на право доступа
             if (comment.author.id != parsedId)
-            {
-                throw new ValidationAccessException("forbidden");
-            }
+                throw new ValidationAccessException("forbidden access"); //ex
+
+            // 
+            if (newComment.content.Length < 1 || comment.content.Length >= 1000)
+                throw new ValidationAccessException("comment length must be greater than 1"); // ex
 
             else
             {

@@ -164,11 +164,23 @@ namespace MIS.Services
             if (inspection.nextVisitDate < inspection.date)
                 throw new ValidationAccessException("wrong next visit date"); //ex
 
-            if (inspectionEdit.conclusion == Conclusion.Death && inspectionEdit.nextVisitDate != null)
-                throw new ValidationAccessException("patient dead, but next visit date exists"); //ex
-
             if (inspectionEdit.conclusion == Conclusion.Death && inspection.hasNested)
                 throw new ValidationAccessException("patient has nested inspections, death conclusion forbidden"); // ex
+
+            if (inspectionEdit.conclusion == Conclusion.Recovery && inspectionEdit.nextVisitDate.HasValue)
+                throw new ValidationAccessException("model conclusion is recovery but next visit date exists"); // ex
+
+            if ((inspectionEdit.conclusion == Conclusion.Recovery || inspectionEdit.conclusion == Conclusion.Recovery) && inspectionEdit.deathDate.HasValue)
+                throw new ValidationAccessException("model conclusion is recovery but death date exists"); // ex
+
+            if (inspection.conclusion == Conclusion.Disease && !inspectionEdit.nextVisitDate.HasValue)
+                throw new ValidationAccessException("model conclusion is disease but next visit date doesnt exists"); // ex
+
+            if (inspectionEdit.conclusion == Conclusion.Death && inspectionEdit.nextVisitDate.HasValue)
+                throw new ValidationAccessException("patient dead, but next visit date exists"); //ex
+
+            if (inspectionEdit.conclusion == Conclusion.Death && !inspectionEdit.deathDate.HasValue)
+                throw new ValidationAccessException("patient dead, but death date doesnt exists"); //ex
 
             // очистка диагнозов 
             if (inspection.diagnoses != null)
