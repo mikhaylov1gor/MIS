@@ -18,7 +18,7 @@ namespace MIS.Controllers
         }
 
         [Authorize]
-        [HttpGet("/icdrootsreport")]
+        [HttpGet("icdrootsreport")]
         public async Task<ActionResult<IcdRootsReportModel>> getReport(
             [FromQuery] DateTime start,
             [FromQuery] DateTime end,

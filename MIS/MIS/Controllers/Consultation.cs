@@ -50,7 +50,7 @@ namespace MIS.Controllers
         }
 
         [Authorize]
-        [HttpPut("/comment/{id}")]
+        [HttpPut("comment/{id}")]
         public async Task<ActionResult<ResponseModel>> editComment(Guid id, InspectionCommentCreateModel comment)
         {
             var response = await _consultationService.EditById(id, comment, User);

@@ -20,7 +20,7 @@ namespace MIS.Controllers
 
         // получить лист специализаций
         [AllowAnonymous]
-        [HttpGet("/specialty")]
+        [HttpGet("specialty")]
         public async Task<ActionResult<SpecialtiesPagedListModel>> getList(
                 [FromQuery] string name = "",
                 [FromQuery] int page = 1,
@@ -31,7 +31,7 @@ namespace MIS.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("/icd10")]
+        [HttpGet("icd10")]
         public async Task<ActionResult<Icd10SearchModel>> getIcd10(
                 [FromQuery] string request = "",
                 [FromQuery] int page = 1,
@@ -42,7 +42,7 @@ namespace MIS.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("/icd10/roots")]
+        [HttpGet("icd10/roots")]
         public async Task<ActionResult<List<Icd10RecordModel>>> getIcdRoot()
         {
             var response = await _dictionaryservice.getIcdRoots();

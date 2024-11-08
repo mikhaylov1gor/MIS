@@ -22,7 +22,7 @@ namespace MIS.Controllers
 
         // регистрация доктора\
         [AllowAnonymous]
-        [HttpPost("/register")]
+        [HttpPost("register")]
         public async Task<ActionResult> register(DoctorRegisterModel doctor)
         {
             var response = await _doctorService.register(doctor);
@@ -31,7 +31,7 @@ namespace MIS.Controllers
 
         // логин
         [AllowAnonymous]
-        [HttpPost("/login")]
+        [HttpPost("login")]
         public async Task<ActionResult<TokenResponseModel>> login(LoginCredentialsModel loginCredentials)
         {
             var response = await _doctorService.login(loginCredentials);
@@ -39,7 +39,7 @@ namespace MIS.Controllers
         }
 
         [Authorize]
-        [HttpPost("/logout")]
+        [HttpPost("logout")]
         public async Task<ActionResult> logout()
         {
             var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
@@ -48,7 +48,7 @@ namespace MIS.Controllers
         }
 
         [Authorize]
-        [HttpGet("/profile")]
+        [HttpGet("profile")]
         public async Task<ActionResult<DoctorModel>> getProfile()
         {
             var response = await _doctorService.getProfile(User);
@@ -56,7 +56,7 @@ namespace MIS.Controllers
         }
 
         [Authorize]
-        [HttpPut("/profile")]
+        [HttpPut("profile")]
         public async Task<ActionResult> editProfile(DoctorEditModel doctorEdit)
         {
             var response = await _doctorService.editProfile(doctorEdit, User);
