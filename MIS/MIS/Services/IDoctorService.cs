@@ -54,9 +54,7 @@ namespace MIS.Services
                                 .AnyAsync(d => d.email == doctor.email || d.phone == doctor.phone);
 
             if (exists)
-            {
                 throw new ValidationAccessException("Email Or Phone Already Registered"); //ex
-            }
 
             // проверка существует ли такая специализация
             exists = await _context.Specialties
@@ -64,9 +62,7 @@ namespace MIS.Services
                 .AnyAsync(i => i.id == doctor.speciality);
 
             if (!exists)
-            {
                 throw new ValidationAccessException("Wrong Specialty"); // ex
-            }
 
             DbDoctor newDoctor = new DbDoctor
             {
@@ -177,14 +173,15 @@ namespace MIS.Services
 
             // проверка на наличие профиля
             if (doctor == null)
-            {
                 throw new KeyNotFoundException("doctor not found");  //ex
-            }
+
+            if (doctorEdit.birthday > DateTime.UtcNow)
+                throw new ValidationAccessException(""); // ex
 
             // проверка существует ли уже доктор с такой почтой или телефоном
             var exists = await _context.Doctors
                                 .AsNoTracking()
-                                .AnyAsync(d => d.email == doctor.email || d.phone == doctor.phone);
+                                .AnyAsync(d => d.email == doctorEdit.email || d.phone == doctorEdit.phone);
 
             if (exists && doctorEdit.email != doctor.email && doctorEdit.phone != doctor.phone)
             {

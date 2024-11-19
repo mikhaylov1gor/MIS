@@ -153,6 +153,9 @@ namespace MIS.Services
                 current = page
             };
 
+            if (pageInfo.current > pageInfo.count)
+                throw new ValidationAccessException("cuurent page must be less than page count");
+
             return new InspectionPagedListModel
             {
                 inspections = inspections,
@@ -316,8 +319,6 @@ namespace MIS.Services
                 await _context.SaveChangesAsync();
                 return null;
             }  
-
-
         }
     }
 }

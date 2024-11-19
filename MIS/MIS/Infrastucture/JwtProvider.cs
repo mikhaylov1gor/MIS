@@ -27,7 +27,6 @@ namespace MIS.Infrastucture
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, doctor.id.ToString()),
-                new Claim(ClaimTypes.Email, doctor.email),
             };
 
             var signingCredentials = new SigningCredentials(

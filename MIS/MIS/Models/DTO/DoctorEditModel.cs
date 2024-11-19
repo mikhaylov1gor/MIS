@@ -8,6 +8,7 @@ namespace MIS.Models.DTO
         public string email { get; set; }
         [MinLength(1), MaxLength(1000)]
         public string name { get; set; }
+        [Required]
         public DateTime? birthday { get; set; }
         public Gender gender { get; set; }
         [Phone]

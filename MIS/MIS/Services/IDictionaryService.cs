@@ -35,7 +35,7 @@ namespace MIS.Services
                 [FromQuery] int page,
                 [FromQuery] int size)
         {
-            if (page < 0 || size < 0)
+            if (page < 1 || size < 1)
             {
                 throw new ValidationAccessException(); // ex
             }
@@ -57,6 +57,9 @@ namespace MIS.Services
                 count = (int)Math.Ceiling((double)totalItems / size),
                 current = page
             };
+
+            if (pageInfo.current > pageInfo.count)
+                throw new ValidationAccessException("cuurent page must be less than page count");
 
             return new SpecialtiesPagedListModel
             {
@@ -93,6 +96,9 @@ namespace MIS.Services
                 count = (int)Math.Ceiling((double)totalItems / size),
                 current = page
             };
+
+            if (pageInfo.current > pageInfo.count)
+                throw new ValidationAccessException("cuurent page must be less than page count");
 
             return new Icd10SearchModel
             {
