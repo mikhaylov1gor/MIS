@@ -1,3 +1,5 @@
+!!! К сожалению, я на начальных этапах разработки забыл добавить gitignore)))))) !!!
+
 The Medical Information System API provides a backend service for managing medical records, doctors, patients, and scheduled visits. The system follows a RESTful architecture and supports authentication, profile management, inspections, and email notifications.
 
 Technologies Used
