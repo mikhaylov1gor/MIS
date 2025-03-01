@@ -140,3 +140,13 @@ C:\Users\mikha\source\repos\webNET-2024_aspnet_1\MIS\MIS\bin\Debug\net8.0\runtim
 C:\Users\mikha\source\repos\webNET-2024_aspnet_1\MIS\MIS\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Runtime.Caching.dll
 C:\Users\mikha\source\repos\webNET-2024_aspnet_1\MIS\MIS\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\mikha\source\repos\webNET-2024_aspnet_1\MIS\MIS\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
+C:\Users\mikha\Source\Repos\webNET-2024_aspnet_1\MIS\MIS\bin\Debug\net8.0\BCrypt.Net-Next.dll
+C:\Users\mikha\Source\Repos\webNET-2024_aspnet_1\MIS\MIS\bin\Debug\net8.0\Specialties.json
+C:\Users\mikha\Source\Repos\webNET-2024_aspnet_1\MIS\MIS\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\mikha\Source\Repos\webNET-2024_aspnet_1\MIS\MIS\bin\Debug\net8.0\Icd10.json
+C:\Users\mikha\source\repos\webNET-2024_aspnet_1\MIS\MIS\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\mikha\Source\Repos\webNET-2024_aspnet_1\MIS\MIS\bin\Debug\net8.0\FluentValidation.dll
+C:\Users\mikha\Source\Repos\webNET-2024_aspnet_1\MIS\MIS\bin\Debug\net8.0\Quartz.dll
+C:\Users\mikha\Source\Repos\webNET-2024_aspnet_1\MIS\MIS\bin\Debug\net8.0\Quartz.AspNetCore.dll
+C:\Users\mikha\Source\Repos\webNET-2024_aspnet_1\MIS\MIS\bin\Debug\net8.0\Quartz.Extensions.DependencyInjection.dll
+C:\Users\mikha\Source\Repos\webNET-2024_aspnet_1\MIS\MIS\bin\Debug\net8.0\Quartz.Extensions.Hosting.dll
